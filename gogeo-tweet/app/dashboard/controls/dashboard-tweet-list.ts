@@ -6,11 +6,11 @@
 
 module gogeo {
 
-    registerDirective("dashboardTweetList", () => {
-        return {
-            restrict: "E",
-            templateUrl: "dashboard/controls/dashboard-tweet-list-template.html"
-        };
-    });
+    // registerDirective("dashboardTweetList", () => {
+    //     return {
+    //         restrict: "E",
+    //         templateUrl: "dashboard/controls/dashboard-tweet-list-template.html"
+    //     };
+    // });
 
 }

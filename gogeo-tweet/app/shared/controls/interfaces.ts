@@ -53,4 +53,10 @@ module gogeo {
     start: Date;
     end: Date;
   }
+
+  export interface IDateHistogram {
+    timestamp: number;
+    date_string: string;
+    count: number;
+  }
 }

@@ -107,6 +107,8 @@ gulp.task("bundleCoreJS", function() {
         fromBower("angular-linkify/angular-linkify.min.js"),
         fromBower("momentjs/min/moment-with-locales.min.js"),
         fromBower("ngGeolocation/ngGeolocation.min.js"),
+        fromBower("d3/d3.min.js"),
+        fromBower("n3-line-chart/build/line-chart.min.js"),
         "app/shared/support/rx-angular.js",
         "app/shared/support/utilities.js",
         "./lib/js/leaflet.tilecluster.js",
@@ -133,8 +135,8 @@ gulp.task("default", [
     "copyResources",
     "copySharedResources",
     "bundleCSS",
-    "bundleCoreJS",
-    "bundleTS"
+    "bundleTS",
+    "bundleCoreJS"
 ]);
 
 gulp.task("deploy", function() {

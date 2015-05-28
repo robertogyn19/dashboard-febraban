@@ -12,7 +12,7 @@ module gogeo {
     static HashtagText = ["entities.hashtags.text"];
     static UserScreenName = ["user.screen_name"];
     static Text = ["text"];
-    static Place = ["place.country_code"];
+    static Place = Configuration.getPlaceFields();
 
     constructor(public fields: Array<string>, public term: string) {}
 
@@ -88,18 +88,16 @@ module gogeo {
   }
 
   export class DateRangeQueryBuilder implements Query {
-    static DateRange = "created_at";
+    static DateRange = Configuration.getDateField();
 
     constructor(public field: string, public range: IDateRange) {}
 
     build() {
       var query = {
-        query: {
-          range : {}
-        }
+        range : {}
       };
 
-      var fieldRestriction = query.query.range[this.field] = {};
+      var fieldRestriction = query.range[this.field] = {};
       var range = this.range;
 
       if (range.start) {

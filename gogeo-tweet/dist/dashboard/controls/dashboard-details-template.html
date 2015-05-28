@@ -1,5 +1,5 @@
 <div class="container-fluid">
-    <div class="row">
+    <div class="row" ng-show="false">
         <div class="col-md-9 tweets-amounts-plus">
             <label>
                 Total collected tweets worldwide
@@ -29,11 +29,11 @@
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs {{ details.selectedHashtag ? 'search-filter' : '' }}" role="tablist">
                 <!-- <ul class="nav nav-tabs search-filter" role="tablist"> -->
-                    <li role="presentation" class="disabled">
-                        <a href="" class="btn" aria-controls="tweetsList" class="disabled" role="tab" data-toggle="tab" ng-disabled="true">Tweets</a>
+                    <li role="presentation" class="active">
+                        <a href="" aria-controls="charts1" role="tab" data-toggle="tab">Charts1</a>
                     </li>
 
-                    <li role="presentation" class="active">
+                    <!-- <li role="presentation" class="active">
                         <a href="" aria-controls="hashtags" role="tab" data-toggle="tab">Hashtags</a>
                     </li>
 
@@ -44,26 +44,30 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </a>
-                    </li>
+                    </li> -->
                 </ul>
 
                 <!-- Tab panes -->
                 <div class="tab-content">
-                    <div role="tabpanel" class="tab-pane active" id="hashtags" ng-show="details.service.loading">
+                    <!-- <div role="tabpanel" class="tab-pane active" id="hashtags" ng-show="details.service.loading">
                         <div class="row">
                             <div class="col-md-5 col-md-offset-5">
                                 <i class="loading fa fa-spinner fa-pulse fa-5x"></i>
                             </div>
                         </div>
+                    </div> -->
+
+                    <div role="tabpanel" class="tab-pane active" id="charts1">
+                        <date-histogram-chart buckets="datehisto.buckets"></date-histogram-chart>
                     </div>
 
-                    <div role="tabpanel" class="tab-pane active" id="hashtags" ng-show="!details.service.loading">
+                    <!-- <div role="tabpanel" class="tab-pane active" id="hashtags" ng-show="!details.service.loading">
                         <dashboard-hashtags buckets="details.hashtagResult.buckets" selected-hashtag="details.selectedHashtag"></dashboard-hashtags>
-                    </div>
+                    </div> -->
 
-                    <div role="tabpanel" class="tab-pane" id="tweetList">
+                    <!-- <div role="tabpanel" class="tab-pane" id="tweetList">
                         <dashboard-tweet-list></dashboard-tweet-list>
-                    </div>
+                    </div> -->
                 </div>
 
             </div>
