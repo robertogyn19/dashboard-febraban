@@ -345,7 +345,7 @@ module gogeo {
         }
 
         private configureUrl(): string {
-            var database = "db1";
+            var database = Configuration.getDatabaseName();
             var collection = Configuration.getCollectionName();
             var buffer = 8;
             var stylename = "gogeo_many_points";
@@ -377,7 +377,7 @@ module gogeo {
                 url = `${url}&geom=${angular.toJson(this.drawnGeom)}`;
             }
 
-            return Configuration.makeUrl(url);
+            return Configuration.prefixUrl(url);
         }
 
         private createThematicLayers(url: string, options: any) {

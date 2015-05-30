@@ -3,6 +3,7 @@
  */
 
 interface String {
-    startsWith(prefix:string):boolean;
-    endsWith(suffix:string):boolean;
+    startsWith(prefix: string): boolean;
+    endsWith(suffix: string): boolean;
+    replaceAll(find: string, replace: string): string;
 }

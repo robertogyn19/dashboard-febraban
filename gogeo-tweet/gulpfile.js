@@ -14,7 +14,6 @@ var gulp = require("gulp"),
 
 var environment = "development";
 
-
 /**
  * Completa o caminho para um caminho no diretório de componentes do bower.
  */
@@ -75,6 +74,7 @@ gulp.task("bundleCSS", function() {
         fromBower("font-awesome/css/font-awesome.css"),
         fromBower("mapbox.js/mapbox.css"),
         fromBower("leaflet-draw/dist/leaflet.draw.css"),
+        fromBower("nvd3/nv.d3.min.css"),
         "./lib/css/MarkerCluster.css",
         "./lib/css/MarkerCluster.Default.css",
         "app/**/*.css"
@@ -108,7 +108,8 @@ gulp.task("bundleCoreJS", function() {
         fromBower("momentjs/min/moment-with-locales.min.js"),
         fromBower("ngGeolocation/ngGeolocation.min.js"),
         fromBower("d3/d3.min.js"),
-        fromBower("n3-line-chart/build/line-chart.min.js"),
+        fromBower("nvd3/nv.d3.min.js"),
+        fromBower("angular-nvd3/dist/angular-nvd3.min.js"),
         "app/shared/support/rx-angular.js",
         "app/shared/support/utilities.js",
         "./lib/js/leaflet.tilecluster.js",

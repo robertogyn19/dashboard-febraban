@@ -29,7 +29,12 @@ var gogeo;
             enumerable: true,
             configurable: true
         });
-        Configuration.makeUrl = function (path) {
+        Configuration.makeUrl = function (path, service) {
+            path = [path, Configuration.getDatabaseName(), Configuration.getCollectionName(), service].join("/");
+            path = path.replaceAll("//", "/");
+            return Configuration.prefixUrl(path);
+        };
+        Configuration.prefixUrl = function (path) {
             var serverUrl = Configuration.apiUrl;
             if (path.match(".*tile.png.*") || path.match(".*cluster.json.*") || path.match(".*aggregations.*")) {
                 serverUrl = Configuration.tileUrl;
@@ -37,7 +42,8 @@ var gogeo;
             if (serverUrl && !serverUrl.endsWith("/")) {
                 serverUrl = serverUrl + "/";
             }
-            return "http://" + serverUrl + (path.startsWith("/") ? path.substring(1) : path);
+            var url = "http://" + serverUrl + (path.startsWith("/") ? path.substring(1) : path);
+            return url;
         };
         Configuration.getTotalTweetsUrl = function () {
             return "http://maps.demos.gogeo.io/1.0/tools/totalRead";
@@ -53,6 +59,10 @@ var gogeo;
         };
         Configuration.getShortenUrl = function () {
             return "http://maps.demos.gogeo.io/1.0/tools/short";
+        };
+        Configuration.getXBackDays = function () {
+            // TODO: Export this to development/deployment config file
+            return 15;
         };
         Configuration.getMapKey = function () {
             // TODO: Export this to development/deployment config file
@@ -78,6 +88,10 @@ var gogeo;
             // TODO: Export this to development/deployment config file
             return ["city", "state"];
         };
+        Configuration.getDatabaseName = function () {
+            // TODO: Export this to development/deployment config file
+            return "db1";
+        };
         Configuration.tweetFields = function () {
             // TODO: Export this to development/deployment config file
             return [
@@ -97,7 +111,7 @@ var gogeo;
         return Configuration;
     })();
     gogeo.Configuration = Configuration;
-    var mod = angular.module("gogeo", ["ngRoute", "ngCookies", "angularytics", "linkify", "ngGeolocation", "n3-line-chart"]).config([
+    var mod = angular.module("gogeo", ["ngRoute", "ngCookies", "angularytics", "linkify", "ngGeolocation", "nvd3"]).config([
         "$routeProvider",
         "AngularyticsProvider",
         function ($routeProvider, angularyticsProvider) {
@@ -503,7 +517,8 @@ var gogeo;
             return this.requestData.q.query.bool.must;
         };
         DashboardQuery.prototype.execute = function (resultHandler) {
-            var url = gogeo.Configuration.makeUrl("geoagg/db1/" + gogeo.Configuration.getCollectionName() + "?mapkey=123");
+            var url = gogeo.Configuration.makeUrl("geoagg");
+            this.requestData["mapkey"] = gogeo.Configuration.getMapKey();
             // console.log("this.requestData", JSON.stringify(this.requestData, null, 2));
             return this.$http.post(url, this.requestData).success(resultHandler);
         };
@@ -531,14 +546,15 @@ var gogeo;
             this.q = angular.toJson(query);
         }
         GogeoGeosearch.prototype.execute = function (resultHandler) {
-            var url = gogeo.Configuration.makeUrl("geosearch/db1/" + gogeo.Configuration.getCollectionName() + "?mapkey=123");
+            var url = gogeo.Configuration.makeUrl("geosearch");
             this.requestData = {
                 geom: this.geom,
                 limit: this.limit,
                 buffer: this.buffer,
                 buffer_measure: this.buffer_measure,
                 fields: this.fields,
-                q: this.q
+                q: this.q,
+                mapkey: gogeo.Configuration.getMapKey()
             };
             return this.$http.post(url, this.requestData).success(resultHandler);
         };
@@ -569,9 +585,10 @@ var gogeo;
             };
         };
         GogeoGeoagg.prototype.execute = function (resultHandler) {
-            var url = gogeo.Configuration.makeUrl("geoagg/db1/" + gogeo.Configuration.getCollectionName() + "?mapkey=123");
+            var url = gogeo.Configuration.makeUrl("geoagg");
             var requestData = {
-                q: this.q
+                q: this.q,
+                mapkey: gogeo.Configuration.getMapKey()
             };
             return this.$http.post(url, requestData).success(resultHandler);
         };
@@ -1075,7 +1092,7 @@ var gogeo;
             }
         };
         DashboardService.prototype.getDateHistogramAggregation = function () {
-            var url = gogeo.Configuration.makeUrl("aggregations/db1/" + gogeo.Configuration.getCollectionName() + "/date_histogram");
+            var url = gogeo.Configuration.makeUrl("aggregations", "date_histogram");
             var q = this.composeQuery().requestData.q;
             console.log("->", JSON.stringify(q, null, 2));
             var options = {
@@ -1091,7 +1108,6 @@ var gogeo;
         };
         DashboardService.prototype.getTweetData = function (latlng, zoom, thematicQuery) {
             var _this = this;
-            var url = gogeo.Configuration.makeUrl("geosearch/db1/" + gogeo.Configuration.getCollectionName() + "?mapkey=123");
             var pixelDist = 2575 * Math.cos((latlng.lat * Math.PI / 180)) / Math.pow(2, (zoom + 8));
             var query = this.composeQuery().requestData.q;
             if (thematicQuery) {
@@ -1283,7 +1299,7 @@ var gogeo;
             this.initialize();
             this.service.dateLimitObservable.subscribeAndApply(this.$scope, function (result) {
                 if (result) {
-                    _this.startDate = moment(new Date(result["max"])).subtract(2, "days").format("MM/DD/YYYY");
+                    _this.startDate = moment(new Date(result["max"])).subtract(gogeo.Configuration.getXBackDays(), "days").format("MM/DD/YYYY");
                     _this.endDate = moment(new Date(result["max"])).format("MM/DD/YYYY");
                 }
             });
@@ -1633,7 +1649,7 @@ var gogeo;
             }
         };
         DashboardMapController.prototype.configureUrl = function () {
-            var database = "db1";
+            var database = gogeo.Configuration.getDatabaseName();
             var collection = gogeo.Configuration.getCollectionName();
             var buffer = 8;
             var stylename = "gogeo_many_points";
@@ -1654,7 +1670,7 @@ var gogeo;
             if (this.drawnGeom) {
                 url = "" + url + "&geom=" + angular.toJson(this.drawnGeom);
             }
-            return gogeo.Configuration.makeUrl(url);
+            return gogeo.Configuration.prefixUrl(url);
         };
         DashboardMapController.prototype.createThematicLayers = function (url, options) {
             var array = [];
@@ -1956,54 +1972,61 @@ var gogeo;
             this.$scope = $scope;
             this.$timeout = $timeout;
             this.service = service;
-            this.SIMPLE_DATE_PATTERN = "YYYY-MM-DD";
+            this.SIMPLE_DATE_PATTERN = "YYYY-MM-dd";
+            // buckets: Array<IDateHistogram> = [];
             this.buckets = [];
-            this.options = {};
-            this.getDataChart();
+            this.options = {
+                chart: {
+                    type: 'historicalBarChart',
+                    height: 380,
+                    width: 430,
+                    margin: {
+                        top: 20,
+                        right: 20,
+                        bottom: 40,
+                        left: 55
+                    },
+                    showValues: true,
+                    transitionDuration: 500,
+                    xAxis: {
+                        axisLabel: "Time",
+                        tickFormat: function (d) {
+                            return moment(new Date(d)).format("DD/MM/YYYY");
+                        },
+                        showMaxMin: true,
+                        rotateLabels: 50
+                    },
+                    yAxis: {
+                        axisLabel: "Count (k)",
+                        tickFormat: function (d) {
+                            return (d / 1000).toFixed(2);
+                        },
+                        axisLabelDistance: 30
+                    }
+                }
+            };
             this.service.queryObservable.where(function (q) { return q != null; }).throttle(400).subscribeAndApply(this.$scope, function (query) { return _this.getDataChart(); });
+            this.buckets = [
+                {
+                    key: "Quantity",
+                    bar: true,
+                    values: []
+                }
+            ];
         }
         DateHistogramChartController.prototype.getDataChart = function () {
             var _this = this;
             this.service.getDateHistogramAggregation().success(function (result) {
-                _this.buckets = [];
+                var values = [];
+                _this.buckets["values"] = [];
                 result.forEach(function (item) {
-                    _this.buckets.push({
-                        timestamp: item['timestamp'] + (3 * 3600 * 1000),
-                        date_string: item['date_string'],
-                        count: item['count']
+                    values.push({
+                        x: item['timestamp'] + (3 * 3600 * 1000),
+                        y: item['count']
                     });
                 });
-                _this.configureChartOptions();
+                _this.buckets[0]["values"] = values;
             });
-        };
-        DateHistogramChartController.prototype.configureChartOptions = function () {
-            var self = this;
-            this.options = {
-                axes: {
-                    x: {
-                        type: "date",
-                        key: "timestamp",
-                        ticksFormat: ''
-                    }
-                },
-                series: [
-                    {
-                        y: "count",
-                        label: "Transactions over time (by day)",
-                        type: "line",
-                        color: "#1CB4DB",
-                        thickness: "2px",
-                        striped: true
-                    }
-                ],
-                lineMode: "cardinal",
-                tooltip: {
-                    mode: "scrubber",
-                    formatter: function (x, y, series) {
-                        return moment(x).format(self.SIMPLE_DATE_PATTERN) + " : " + y;
-                    }
-                }
-            };
         };
         DateHistogramChartController.$inject = [
             "$scope",
@@ -2086,7 +2109,7 @@ var gogeo;
                 // template: "<div></div>",
                 link: function (scope, element, attrs) {
                     var rawElement = element[0];
-                    var url = "http://api.gogeo.io/1.0/map/db1/tweets/{z}/{x}/{y}/tile.png?mapkey=123&stylename=gogeo_many_points";
+                    var url = "http://api.gogeo.io/1.0/map/" + gogeo.Configuration.getDatabaseName() + "/" + gogeo.Configuration.getCollectionName() + "/{z}/{x}/{y}/tile.png?mapkey=" + gogeo.Configuration.getMapKey() + "&stylename=gogeo_many_points";
                     var initialPos = L.latLng(43.717232, -92.353034);
                     var map = L.map("welcome-map").setView(initialPos, 5);
                     map.addLayer(L.tileLayer('https://dnv9my2eseobd.cloudfront.net/v3/cartodb.map-4xtxp73f/{z}/{x}/{y}.png', {

@@ -18,7 +18,14 @@ module gogeo {
       return <string[]> settings["subdomains"];
     }
 
-    static makeUrl(path: string) {
+    static makeUrl(path: string, service?: string): string {
+      path = [path, Configuration.getDatabaseName(), Configuration.getCollectionName(), service].join("/");
+      path = path.replaceAll("//", "/");
+
+      return Configuration.prefixUrl(path);
+    }
+
+    static prefixUrl(path: string): string {
       var serverUrl: string = Configuration.apiUrl;
 
       if (path.match(".*tile.png.*") || path.match(".*cluster.json.*") || path.match(".*aggregations.*")) {
@@ -29,7 +36,8 @@ module gogeo {
         serverUrl = serverUrl + "/";
       }
 
-      return "http://" + serverUrl + (path.startsWith("/") ? path.substring(1) : path);
+      var url = "http://" + serverUrl + (path.startsWith("/") ? path.substring(1) : path);
+      return url;
     }
 
     static getTotalTweetsUrl(): string {
@@ -52,6 +60,10 @@ module gogeo {
       return "http://maps.demos.gogeo.io/1.0/tools/short";
     }
 
+    static getXBackDays(): number {
+      // TODO: Export this to development/deployment config file
+      return 15;
+    }
     static getMapKey(): string {
       // TODO: Export this to development/deployment config file
       return "123";
@@ -82,6 +94,11 @@ module gogeo {
       return [ "city", "state" ];
     }
 
+    static getDatabaseName(): string {
+      // TODO: Export this to development/deployment config file
+      return "db1";
+    }
+
     static tweetFields(): Array<string> {
       // TODO: Export this to development/deployment config file
       return [
@@ -100,7 +117,7 @@ module gogeo {
     }
   }
 
-  var mod = angular.module("gogeo", ["ngRoute", "ngCookies", "angularytics", "linkify", "ngGeolocation", "n3-line-chart"])
+  var mod = angular.module("gogeo", ["ngRoute", "ngCookies", "angularytics", "linkify", "ngGeolocation", "nvd3"])
     .config([
       "$routeProvider",
       "AngularyticsProvider",

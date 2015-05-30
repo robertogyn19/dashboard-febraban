@@ -28,7 +28,7 @@ module gogeo {
     }
 
     execute(resultHandler: (ITweet) => void) {
-      var url = Configuration.makeUrl("geosearch/db1/" + Configuration.getCollectionName() + "?mapkey=123");
+      var url = Configuration.makeUrl("geosearch");
 
       this.requestData = {
         geom: this.geom,
@@ -36,7 +36,8 @@ module gogeo {
         buffer: this.buffer,
         buffer_measure: this.buffer_measure,
         fields: this.fields,
-        q: this.q
+        q: this.q,
+        mapkey: Configuration.getMapKey()
       }
 
       return this.$http

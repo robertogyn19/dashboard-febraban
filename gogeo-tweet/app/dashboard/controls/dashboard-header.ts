@@ -26,7 +26,7 @@ module gogeo {
       this.service.dateLimitObservable
         .subscribeAndApply(this.$scope, (result: any) => {
           if (result) {
-            this.startDate = moment(new Date(result["max"])).subtract(2, "days").format("MM/DD/YYYY");
+            this.startDate = moment(new Date(result["max"])).subtract(Configuration.getXBackDays(), "days").format("MM/DD/YYYY");
             this.endDate = moment(new Date(result["max"])).format("MM/DD/YYYY");
           }
         });

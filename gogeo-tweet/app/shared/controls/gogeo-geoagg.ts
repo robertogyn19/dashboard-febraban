@@ -34,10 +34,11 @@ module gogeo {
     }
 
     execute(resultHandler: (IGogeoAgg) => void) {
-      var url = Configuration.makeUrl("geoagg/db1/" + Configuration.getCollectionName() + "?mapkey=123");
+      var url = Configuration.makeUrl("geoagg");
 
       var requestData = {
-        q: this.q
+        q: this.q,
+        mapkey: Configuration.getMapKey()
       };
 
       return this.$http
