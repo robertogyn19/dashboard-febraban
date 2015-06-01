@@ -38,9 +38,19 @@ module gogeo {
             return (d / 1000).toFixed(2);
           },
           axisLabelDistance: 30
+        },
+        bars: {
+          padData: true,
+          clipEdge: false
         }
       }
     };
+
+    config: any = {
+      autorefresh: false,
+      refreshDataOnly: true,
+      debounce: 200
+    }
 
     constructor(
       private $scope:   ng.IScope,

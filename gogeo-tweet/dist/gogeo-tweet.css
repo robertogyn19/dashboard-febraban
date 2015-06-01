@@ -4,10 +4,9 @@
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  */
 /*! normalize.css v3.0.2 | MIT License | git.io/normalize */
-.fa,.glyphicon{-moz-osx-font-smoothing:grayscale}
 body,figure{margin:0}
 .invisible,.leaflet-tile{visibility:hidden}
-.datepicker table,.nvtooltip,svg{-webkit-touch-callout:none}
+.fa,.glyphicon{-moz-osx-font-smoothing:grayscale}
 .nv-brush .extent,.nvd3 .background path,.nvd3 .brush .extent,.nvd3 .nv-axis line,.nvd3 .nv-axis path{shape-rendering:crispEdges}
 #foursquare,#instagram,#iphone,#web{marker-comp-op:lighten;marker-fill-opacity:.9}
 html{font-family:sans-serif;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;font-size:10px;-webkit-tap-highlight-color:transparent}
@@ -764,7 +763,7 @@ select[multiple].form-group-lg .form-control,textarea.form-group-lg .form-contro
 .form-horizontal .form-group-sm .control-label{padding-top:6px}
 }
 .btn{display:inline-block;padding:6px 12px;margin-bottom:0;font-size:14px;font-weight:400;line-height:1.42857143;text-align:center;white-space:nowrap;vertical-align:middle;-ms-touch-action:manipulation;touch-action:manipulation;cursor:pointer;user-select:none;border:1px solid transparent;border-radius:4px}
-.btn,.datepicker table{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none}
+.btn,.datepicker table{-moz-user-select:none;-ms-user-select:none;-webkit-user-select:none}
 .btn.active.focus,.btn.active:focus,.btn.focus,.btn:active.focus,.btn:active:focus,.btn:focus{outline:dotted thin;outline:-webkit-focus-ring-color auto 5px;outline-offset:-2px}
 .btn.focus,.btn:focus,.btn:hover{color:#333;text-decoration:none}
 .btn.active,.btn:active{outline:0;-webkit-box-shadow:inset 0 3px 5px rgba(0,0,0,.125);box-shadow:inset 0 3px 5px rgba(0,0,0,.125)}
@@ -1532,7 +1531,7 @@ td.visible-print,th.visible-print{display:table-cell!important}
 .datepicker-dropdown.datepicker-orient-bottom:after{bottom:-6px;border-bottom:0;border-top:6px solid #fff}
 .datepicker>div{display:none}
 .datepicker.days div.datepicker-days,.datepicker.months div.datepicker-months,.datepicker.years div.datepicker-years{display:block}
-.datepicker table{margin:0;-khtml-user-select:none;user-select:none}
+.datepicker table{margin:0;-webkit-touch-callout:none;-khtml-user-select:none;user-select:none}
 .datepicker table tr td,.datepicker table tr th{text-align:center;width:30px;height:30px;border-radius:4px;border:none}
 .table-striped .datepicker table tr td,.table-striped .datepicker table tr th{background-color:transparent}
 .datepicker table tr td.day.focused,.datepicker table tr td.day:hover{background:#eee;cursor:pointer}
@@ -2145,7 +2144,6 @@ td.visible-print,th.visible-print{display:table-cell!important}
 .leaflet-container .mapbox-button:hover,.leaflet-container.dark .mapbox-button:hover{color:#fff;background-color:#3bb2d0}
 .leaflet-image-layer,.leaflet-layer,.leaflet-map-pane,.leaflet-marker-icon,.leaflet-marker-pane,.leaflet-marker-shadow,.leaflet-overlay-pane,.leaflet-overlay-pane svg,.leaflet-popup-pane,.leaflet-shadow-pane,.leaflet-tile,.leaflet-tile-container,.leaflet-tile-pane,.leaflet-zoom-box{position:absolute;left:0;top:0}
 .leaflet-marker-icon,.leaflet-marker-shadow,.leaflet-tile{-webkit-user-drag:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}
-.leaflet-overlay-pane svg,.nvtooltip{-moz-user-select:none}
 .leaflet-marker-icon,.leaflet-marker-shadow{display:block}
 .leaflet-tile{filter:inherit}
 .leaflet-tile-loaded{visibility:inherit}
@@ -2299,6 +2297,7 @@ td.visible-print,th.visible-print{display:table-cell!important}
 .leaflet-container img.leaflet-tile{max-width:none!important}
 .leaflet-container img.leaflet-marker-icon{max-width:none}
 .leaflet-container img.leaflet-image-layer{max-width:15000px!important}
+.leaflet-overlay-pane svg{-moz-user-select:none}
 .leaflet-oldie .mapbox-modal .mapbox-modal-content{display:none}
 .leaflet-oldie .mapbox-modal.active .mapbox-modal-content{display:block}
 .leaflet-oldie .leaflet-container.dark .map-tooltip .close,.leaflet-oldie .leaflet-control-layers-toggle,.leaflet-oldie .leaflet-control-zoom-in,.leaflet-oldie .leaflet-control-zoom-out,.leaflet-oldie .leaflet-popup-close-button,.leaflet-oldie .map-tooltip .close,.leaflet-oldie .mapbox-icon{background-image:url(data:image/png;base64,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)}
@@ -2360,7 +2359,8 @@ td.visible-print,th.visible-print{display:table-cell!important}
 .leaflet-oldie .leaflet-draw-toolbar{border:1px solid #999}
 .chartWrap{margin:0;padding:0;overflow:hidden}
 .nvtooltip.with-3d-shadow,.with-3d-shadow .nvtooltip{-moz-box-shadow:0 5px 10px rgba(0,0,0,.2);-webkit-box-shadow:0 5px 10px rgba(0,0,0,.2);box-shadow:0 5px 10px rgba(0,0,0,.2);-webkit-border-radius:6px;-moz-border-radius:6px;border-radius:6px}
-.nvtooltip{position:absolute;background-color:rgba(255,255,255,1);padding:1px;border:1px solid rgba(0,0,0,.2);z-index:10000;font-family:Arial;font-size:13px;text-align:left;white-space:nowrap;-webkit-user-select:none;-khtml-user-select:none;-ms-user-select:none;user-select:none}
+.nvtooltip{position:absolute;background-color:rgba(255,255,255,1);padding:1px;border:1px solid rgba(0,0,0,.2);z-index:10000;font-family:Arial;font-size:13px;text-align:left;white-space:nowrap;user-select:none}
+.nvtooltip,svg{-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none}
 .nvtooltip h3,.nvtooltip p{margin:0;text-align:center}
 .nvtooltip.with-transitions,.with-transitions .nvtooltip{transition:opacity 250ms linear;-moz-transition:opacity 250ms linear;-webkit-transition:opacity 250ms linear;transition-delay:250ms;-moz-transition-delay:250ms;-webkit-transition-delay:250ms}
 .nvtooltip.x-nvtooltip,.nvtooltip.y-nvtooltip{padding:8px}
@@ -2374,8 +2374,7 @@ td.visible-print,th.visible-print{display:table-cell!important}
 .nvtooltip table td.legend-color-guide div{width:8px;height:8px;vertical-align:middle}
 .nvtooltip .footer{padding:3px;text-align:center}
 .nvtooltip-pending-removal{position:absolute;pointer-events:none}
-svg{-khtml-user-select:none;user-select:none;display:block;width:100%;height:100%}
-.icon-button,svg{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none}
+svg{user-select:none;display:block;width:100%;height:100%}
 svg text{font:400 12px Arial}
 svg .title{font:700 14px Arial}
 .nvd3 .nv-axis .nv-axisMaxMin text,.nvd3.nv-noData{font-weight:700}
@@ -2566,18 +2565,21 @@ a{color:#168fae}
 .leaflet-popup-content{padding:0}
 .loading{color:#1CB4DB}
 .marker-popup .marker-content .mc-weet-thumb{float:left;margin:20px;padding:0}
-.icon-button{background-color:#fff;border-radius:3.6rem;cursor:pointer;display:inline-block;font-size:2rem;height:3.6rem;line-height:3.6rem;margin:0 5px;position:relative;text-align:center;user-select:none;width:3.6rem}
-.icon-button span{border-radius:0;display:block;height:0;left:50%;margin:0;top:50%;transition:all .3s;width:0}
-.icon-button i,.icon-button span{position:absolute;-webkit-transition:all .3s;-moz-transition:all .3s;-o-transition:all .3s}
-.icon-button:hover span{width:3.6rem;height:3.6rem;border-radius:3.6rem;margin:-1.8rem}
-.twitter span{background-color:#4099ff}
-.facebook span{background-color:#3B5998}
-.google-plus span{background-color:#db5a3c}
-.icon-button i{background:0 0;color:#fff;height:3.6rem;left:0;line-height:3.6rem;top:0;transition:all .3s;width:3.6rem;z-index:10}
-.icon-button .icon-twitter{color:#4099ff}
-.icon-button .icon-facebook{color:#3B5998}
-.icon-button .icon-google-plus{color:#db5a3c}
-.icon-button:hover .icon-facebook,.icon-button:hover .icon-google-plus,.icon-button:hover .icon-twitter{color:#fff}
+slider,slider span{display:inline-block}
+slider{position:relative;height:22px;width:100%;margin:25px 5px;vertical-align:middle}
+slider span{white-space:nowrap;position:absolute}
+slider span.base{width:100%;height:100%;padding:0}
+slider span.bar{width:100%;height:100%;z-index:0;background:#F5F5F5;-webkit-border-radius:1em;border-radius:1em;border:1px solid #E3E3E3}
+slider span.bar.selection{width:0;z-index:1;background:#F5F5F5}
+slider span.pointer{cursor:pointer;width:20px;height:20px;top:1px;background-color:#fff;border:1px solid #000;z-index:2;-webkit-border-radius:1em;border-radius:1em}
+slider span.pointer:after{content:'';background-color:#2C3B44;width:6px;height:6px;position:absolute;top:6px;left:6px;-webkit-border-radius:1em;border-radius:1em}
+slider span.pointer:hover:after{background-color:#000}
+slider span.pointer.active:after{background-color:#FF5C17}
+slider span.bubble{cursor:default;top:-20px;padding:1px 3px;font-size:.8em;font-family:sans-serif}
+slider span.bubble.selection{top:15px}
+slider span.bubble.limit{color:grey}
+slider span.bar.unselected{width:0;z-index:1;background:#f5f5f5}
+slider>input{max-width:100%}
 @android-color: #F84F40;
 #android[source=~".*Android.*"]{marker-comp-op:lighten;marker-fill-opacity:.9;marker-fill:@android-color;marker-line-color:@android-color}
 @foursquare-color: #229A00;

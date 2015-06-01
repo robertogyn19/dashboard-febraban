@@ -25,12 +25,24 @@
 
     <div class="row">
         <div class="col-md-12">
+            <hr style="border-color: #D8D8D8;">
+            <div class="row">
+                <div class="col-md-12">
+                    <h6 class="text-muted">
+                        Radius in kilometers
+                    </h6>
+                    <radius-slider></radius-slider>
+                </div>
+            </div>
             <div class="tab-container" role="tabpanel">
                 <!-- Nav tabs -->
-                <ul class="nav nav-tabs {{ details.selectedHashtag ? 'search-filter' : '' }}" role="tablist">
-                <!-- <ul class="nav nav-tabs search-filter" role="tablist"> -->
+                <ul class="nav nav-tabs {{ details.selectedHashtag ? 'search-filter' : '' }}" role="navigation">
                     <li role="presentation" class="active">
-                        <a href="" aria-controls="charts1" role="tab" data-toggle="tab">Charts1</a>
+                        <a href="" data-target="#charts2" aria-controls="charts2" role="tab" data-toggle="tab">Charts2</a>
+                    </li>
+
+                    <li role="presentation">
+                        <a href="" data-target="#charts1" aria-controls="charts1" role="tab" data-toggle="tab">Charts1</a>
                     </li>
 
                     <!-- <li role="presentation" class="active">
@@ -57,9 +69,15 @@
                         </div>
                     </div> -->
 
-                    <div role="tabpanel" class="tab-pane active" id="charts1">
+                    <div class="tab-pane" id="charts1" role="tabpanel">
                         <date-histogram-chart buckets="datehisto.buckets"></date-histogram-chart>
                     </div>
+
+                    <div class="tab-pane active" id="charts2" role="tabpanel">
+                        <h3>Chart2 Tab Content</h3>
+                    </div>
+
+                    <hr style="margin-top: 40px;">
 
                     <!-- <div role="tabpanel" class="tab-pane active" id="hashtags" ng-show="!details.service.loading">
                         <dashboard-hashtags buckets="details.hashtagResult.buckets" selected-hashtag="details.selectedHashtag"></dashboard-hashtags>

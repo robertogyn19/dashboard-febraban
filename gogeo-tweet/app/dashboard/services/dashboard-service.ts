@@ -359,7 +359,7 @@ module gogeo {
       var url = Configuration.makeUrl("aggregations", "date_histogram");
       var q = this.composeQuery().requestData.q;
 
-      console.log("->", JSON.stringify(q, null, 2));
+      // console.log("->", JSON.stringify(q, null, 2));
 
       var options = {
         params: {

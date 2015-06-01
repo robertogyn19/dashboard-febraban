@@ -117,7 +117,7 @@ module gogeo {
     }
   }
 
-  var mod = angular.module("gogeo", ["ngRoute", "ngCookies", "angularytics", "linkify", "ngGeolocation", "nvd3"])
+  var mod = angular.module("gogeo", ["ngRoute", "ngCookies", "angularytics", "linkify", "ngGeolocation", "nvd3", "vr.directives.slider"])
     .config([
       "$routeProvider",
       "AngularyticsProvider",

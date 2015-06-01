@@ -110,6 +110,8 @@ gulp.task("bundleCoreJS", function() {
         fromBower("d3/d3.min.js"),
         fromBower("nvd3/nv.d3.min.js"),
         fromBower("angular-nvd3/dist/angular-nvd3.min.js"),
+        fromBower("angular-touch/angular-touch.min.js"),
+        fromBower("venturocket-angular-slider/build/angular-slider.min.js"),
         "app/shared/support/rx-angular.js",
         "app/shared/support/utilities.js",
         "./lib/js/leaflet.tilecluster.js",

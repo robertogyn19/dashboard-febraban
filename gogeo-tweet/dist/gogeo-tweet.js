@@ -111,7 +111,7 @@ var gogeo;
         return Configuration;
     })();
     gogeo.Configuration = Configuration;
-    var mod = angular.module("gogeo", ["ngRoute", "ngCookies", "angularytics", "linkify", "ngGeolocation", "nvd3"]).config([
+    var mod = angular.module("gogeo", ["ngRoute", "ngCookies", "angularytics", "linkify", "ngGeolocation", "nvd3", "vr.directives.slider"]).config([
         "$routeProvider",
         "AngularyticsProvider",
         function ($routeProvider, angularyticsProvider) {
@@ -1094,7 +1094,7 @@ var gogeo;
         DashboardService.prototype.getDateHistogramAggregation = function () {
             var url = gogeo.Configuration.makeUrl("aggregations", "date_histogram");
             var q = this.composeQuery().requestData.q;
-            console.log("->", JSON.stringify(q, null, 2));
+            // console.log("->", JSON.stringify(q, null, 2));
             var options = {
                 params: {
                     mapkey: gogeo.Configuration.getMapKey(),
@@ -1435,7 +1435,7 @@ var gogeo;
             var _this = this;
             this.map = map;
             this.baseLayers.addLayer(this.getDayMap());
-            this.map.addLayer(this.baseLayers);
+            // this.map.addLayer(this.baseLayers);
             this.map.on("moveend", function (e) { return _this.onMapLoaded(); });
             this.map.on("click", function (e) { return _this.openPopup(e); });
             this.map.on("draw:created", function (e) { return _this.drawnHandler(e); });
@@ -1534,8 +1534,20 @@ var gogeo;
         };
         DashboardMapController.prototype.centerMap = function (lat, lng) {
             if (lat && lng) {
-                var center = new L.LatLng(lat, lng);
-                this.map.setView(center, 12);
+                // var center = new L.LatLng(lat, lng);
+                var center = new L.LatLng(51.508, -0.11);
+                // this.drawnItems.addLayer(circle);
+                var circleOptions = {
+                    color: "red",
+                    fillColor: "#f03",
+                    fillOpacity: 0.5
+                };
+                var circle = new L.Circle(center, 500, circleOptions);
+                // var circle = L.circleMarker(center, circleOptions).setRadius(5);
+                // circle.addTo(this.map);
+                this.layerGroup.addLayer(circle);
+                this.map.setView(center, 13);
+                console.log("add circle");
             }
         };
         DashboardMapController.prototype.getNightMap = function () {
@@ -1703,7 +1715,7 @@ var gogeo;
         };
         DashboardMapController.prototype.configureThematicUrl = function (term, stylename) {
             var originalQuery = this.query;
-            if (term === 'others') {
+            if (term === "others") {
                 var thematicQuery = this.createThematicOthersQuery(this.query);
                 this.query = thematicQuery.build();
             }
@@ -1908,7 +1920,7 @@ var gogeo;
                         attributionControl: false,
                         minZoom: 4,
                         maxZoom: 18,
-                        center: new L.LatLng(37.757836, -122.447041),
+                        // center: center,
                         zoom: 6,
                         maptiks_id: "leaflet-map"
                     };
@@ -2002,8 +2014,17 @@ var gogeo;
                             return (d / 1000).toFixed(2);
                         },
                         axisLabelDistance: 30
+                    },
+                    bars: {
+                        padData: true,
+                        clipEdge: false
                     }
                 }
+            };
+            this.config = {
+                autorefresh: false,
+                refreshDataOnly: true,
+                debounce: 200
             };
             this.service.queryObservable.where(function (q) { return q != null; }).throttle(400).subscribeAndApply(this.$scope, function (query) { return _this.getDataChart(); });
             this.buckets = [
@@ -2046,6 +2067,45 @@ var gogeo;
             scope: {
                 buckets: "="
             },
+            link: function (scope, element, attrs, controller) {
+            }
+        };
+    });
+})(gogeo || (gogeo = {}));
+/// <reference path="../../shell.ts" />
+var gogeo;
+(function (gogeo) {
+    var RadiusSliderController = (function () {
+        function RadiusSliderController($scope, $timeout) {
+            var _this = this;
+            this.$scope = $scope;
+            this.$timeout = $timeout;
+            this.radius = 4.5;
+            this.radiusObservale = new Rx.BehaviorSubject(0);
+            Rx.Observable.merge(this.radiusObservale).throttle(200).subscribe(function () {
+                console.log("subcribe", _this.radius);
+            });
+        }
+        RadiusSliderController.prototype.updateRadius = function () {
+            if (this.radius != this.radiusObservale["value"]) {
+                this.radiusObservale.onNext(this.radius);
+            }
+        };
+        RadiusSliderController.$inject = [
+            "$scope",
+            "$timeout"
+        ];
+        return RadiusSliderController;
+    })();
+    gogeo.RadiusSliderController = RadiusSliderController;
+    gogeo.registerDirective("radiusSlider", function () {
+        return {
+            restrict: "E",
+            template: "\n        <div class=\"container-fluid\">\n          <slider\n              ng-model=\"slider.radius\"\n              ng-change=\"slider.updateRadius()\"\n              floor=\"1\"\n              ceiling=\"10\"\n              precision=\"1\"\n              step=\"0.5\">\n          </slider>\n        </div>\n      ",
+            controller: RadiusSliderController,
+            controllerAs: "slider",
+            bindToController: true,
+            scope: {},
             link: function (scope, element, attrs, controller) {
             }
         };
