@@ -366,6 +366,7 @@ dt,kbd kbd,label{font-weight:700}
 .text-lowercase{text-transform:lowercase}
 .text-uppercase{text-transform:uppercase}
 .text-capitalize{text-transform:capitalize}
+.dash-button,.dash-title,.initialism,.jumbotron .btn-primary{text-transform:uppercase}
 .text-muted{color:#777}
 .text-primary{color:#337ab7}
 a.text-primary:hover{color:#286090}
@@ -400,7 +401,7 @@ dd{margin-left:0}
 .dl-horizontal dd{margin-left:180px}
 }
 abbr[data-original-title],abbr[title]{cursor:help;border-bottom:1px dotted #777}
-.initialism{font-size:90%;text-transform:uppercase}
+.initialism{font-size:90%}
 blockquote{padding:10px 20px;margin:0 0 20px;font-size:17.5px;border-left:5px solid #eee}
 blockquote ol:last-child,blockquote p:last-child,blockquote ul:last-child{margin-bottom:0}
 blockquote .small,blockquote footer,blockquote small{display:block;font-size:80%;color:#777}
@@ -2498,16 +2499,17 @@ body,html{height:100%;min-height:100%}
 .jumbotron a,.jumbotron h1,.jumbotron p{font-family:'Titillium Web',sans-serif;color:#fcfcfc}
 .jumbotron h1{font-size:48px;line-height:73px;font-weight:600}
 .jumbotron p{font-size:36px;line-height:55px}
-.jumbotron .btn-primary{font-size:24px;line-height:36px;font-weight:600;text-transform:uppercase;padding:21px 85px;margin-top:25px;border-radius:4px}
+.jumbotron .btn-primary{font-size:24px;line-height:36px;font-weight:600;padding:21px 85px;margin-top:25px;border-radius:4px}
 .daterange input.form-control{width:100px;max-width:100px}
 @font-face{font-family:"Titillium Web",sans-serif}
 body,h1,h2,h3,h4,h5,h6{font-family:"Titillium Web"!important}
+.dash-title,.numberpad{font-family:"Titillium Web"}
 a{color:#168fae}
-.numberpad{font-family:"Titillium Web";font-size:18pt;color:#1cb4db}
+.numberpad{font-size:18pt;color:#1cb4db}
 .numberpad-big{font-size:28pt}
 .dashboard-panel .dashboard-top-panel .navbar .navbar-brand{margin-right:16px}
-.dashboard-panel .dashboard-map-panel{width:73%;height:100%;position:relative;float:left}
-.dashboard-panel .dashboard-right-panel{overflow-y:auto;display:block;position:relative;float:right;background-color:#f0f0f0;margin:0;padding:0;z-index:2;width:27%;height:100%;border-left:solid 2px #1cb4db}
+.dashboard-panel .dashboard-map-panel{width:75%;height:100%;position:relative;float:left}
+.dashboard-panel .dashboard-right-panel{overflow-y:auto;overflow-x:hidden;display:block;position:relative;float:right;background-color:#f0f0f0;margin:0;padding:0;z-index:2;width:25%;height:100%;border-left:solid 2px #1cb4db}
 .dashboard-header .navbar{padding-top:5px}
 .dashboard-header .navbar-dashboard{background-color:transparent;border:none}
 .dashboard-header .navbar-header .navbar-brand{width:auto;height:auto;margin:0;padding:0 10px 0 0}
@@ -2539,6 +2541,10 @@ a{color:#168fae}
 .search-input-container input{height:45px!important}
 .hashtag-marker-button{padding-top:5px!important}
 .btn-warning,.btn-warning:hover{margin-top:-56px;font-size:14px;color:#2F383A;font-weight:600;line-height:28px;background:#ffe341;border:1px solid transparent}
+.dash-buttons{width:95%;margin-bottom:10px}
+.dash-title{color:#000;left:.5em;font-size:18pt}
+.dash-button{width:50%;background:#FFF;color:#ABABAB;left:10px}
+.dash-button.selected,.dash-button:hover{background:#1cb4db;color:#FFF}
 .map-control li,.map-control li:hover{font-weight:600;font-size:10px;line-height:15px}
 .map-control .draw-item,.map-control .item{margin-top:0;margin-bottom:0;list-style:none}
 .map-control{display:block;top:13px;left:30px;position:absolute;z-index:7}

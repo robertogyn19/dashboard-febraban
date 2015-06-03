@@ -92,6 +92,18 @@ var gogeo;
             // TODO: Export this to development/deployment config file
             return "db1";
         };
+        Configuration.getReducedName = function (name) {
+            var names = {
+                "Comércio varejista de produtos alimentícios, bebidas e fumo": "Alimentícios",
+                "Comércio varejista de equipamentos de informática e comunicação; equipamentos e artigos de uso doméstico": "Informática",
+                "Restaurantes e outros serviços de alimentação e bebidas": "Alimentação",
+                "Comércio varejista de material de construção": "Construção",
+                "Comércio varejista de produtos farmacêuticos, perfumaria e cosméticos e artigos médicos, ópticos e ortopédicos": "Farmacêuticos",
+                "Hotéis e similares": "Hotéis",
+                "Comércio varejista de combustíveis para veículos automotores": "Combustíveis"
+            };
+            return names[name];
+        };
         Configuration.tweetFields = function () {
             // TODO: Export this to development/deployment config file
             return [
@@ -1958,6 +1970,151 @@ var gogeo;
                 scope.$on("destroy", function () {
                     $(window).off("resize", adjustSizes);
                 });
+            }
+        };
+    });
+})(gogeo || (gogeo = {}));
+/// <reference path="../../shell.ts" />
+/// <reference path="../services/dashboard-service.ts" />
+var gogeo;
+(function (gogeo) {
+    var DashboardSelectorController = (function () {
+        function DashboardSelectorController($scope, $interval, $filter, service) {
+            this.$scope = $scope;
+            this.$interval = $interval;
+            this.$filter = $filter;
+            this.service = service;
+            this.selectedDash = true;
+            this.selectedTop = false;
+            this.dateHistoData = [];
+            this.dateHistoOptions = {
+                chart: {
+                    type: "lineChart",
+                    height: 320,
+                    width: 400,
+                    margin: {
+                        top: 20,
+                        right: 20,
+                        bottom: 40,
+                        left: 55
+                    },
+                    showValues: true,
+                    transitionDuration: 500,
+                    useInteractiveGuideline: true,
+                    xAxis: {
+                        axisLabel: "Time",
+                        tickFormat: function (d) {
+                            return moment(new Date(d)).format("DD/MM");
+                        },
+                        showMaxMin: true,
+                        rotateLabels: 50,
+                        margin: {
+                            top: 50
+                        }
+                    },
+                    yAxis: {
+                        tickFormat: function (d) {
+                            return numeral(d / 1000).format("$ 0,0.00");
+                        }
+                    }
+                }
+            };
+            this.pieChartData = [];
+            this.pieChartOptions = {
+                chart: {
+                    type: "pieChart",
+                    height: 500,
+                    width: 400,
+                    x: function (d) {
+                        return gogeo.Configuration.getReducedName(d["key"]);
+                    },
+                    y: function (d) {
+                        return d["count"];
+                    },
+                    showLabels: false,
+                    transitionDuration: 500,
+                    labelThreshold: 0.01,
+                    legend: {
+                        key: function (d) {
+                            return d["x"];
+                        },
+                        margin: {
+                            top: 5,
+                            right: 35,
+                            bottom: 5,
+                            left: 0
+                        }
+                    }
+                }
+            };
+            this.dateHistoData = [
+                {
+                    key: "Quantity (x 1000)",
+                    bar: false,
+                    values: [
+                        {
+                            x: 1430784000000 + (3 * 3600 * 1000),
+                            y: 11373.759899616241
+                        },
+                        {
+                            x: 1430870400000 + (3 * 3600 * 1000),
+                            y: 5177.699995994568
+                        }
+                    ]
+                }
+            ];
+            this.pieChartData = [
+                {
+                    key: "Comércio varejista de produtos alimentícios, bebidas e fumo",
+                    count: 16
+                },
+                {
+                    key: "Comércio varejista de equipamentos de informática e comunicação; equipamentos e artigos de uso doméstico",
+                    count: 15
+                },
+                {
+                    key: "Restaurantes e outros serviços de alimentação e bebidas",
+                    count: 13
+                },
+                {
+                    key: "Comércio varejista de material de construção",
+                    count: 11
+                },
+                {
+                    key: "Comércio varejista de produtos farmacêuticos, perfumaria e cosméticos e artigos médicos, ópticos e ortopédicos",
+                    count: 11
+                },
+                {
+                    key: "Hotéis e similares",
+                    count: 3
+                },
+                {
+                    key: "Comércio varejista de combustíveis para veículos automotores",
+                    count: 1
+                }
+            ];
+        }
+        DashboardSelectorController.prototype.selectButton = function () {
+            this.selectedDash = !this.selectedDash;
+            this.selectedTop = !this.selectedTop;
+        };
+        DashboardSelectorController.$inject = [
+            "$scope",
+            "$interval",
+            "$filter",
+            gogeo.DashboardService.$named
+        ];
+        return DashboardSelectorController;
+    })();
+    gogeo.registerDirective("dashboardSelector", function () {
+        return {
+            restrict: "CE",
+            templateUrl: "dashboard/controls/dashboard-selector-template.html",
+            controller: DashboardSelectorController,
+            controllerAs: "selector",
+            bindToController: true,
+            scope: true,
+            link: function (scope, element, attrs, controller) {
             }
         };
     });

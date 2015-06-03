@@ -99,6 +99,20 @@ module gogeo {
       return "db1";
     }
 
+    static getReducedName(name: string): string {
+      var names = {
+        "Comércio varejista de produtos alimentícios, bebidas e fumo": "Alimentícios",
+        "Comércio varejista de equipamentos de informática e comunicação; equipamentos e artigos de uso doméstico": "Informática",
+        "Restaurantes e outros serviços de alimentação e bebidas": "Alimentação",
+        "Comércio varejista de material de construção": "Construção",
+        "Comércio varejista de produtos farmacêuticos, perfumaria e cosméticos e artigos médicos, ópticos e ortopédicos": "Farmacêuticos",
+        "Hotéis e similares": "Hotéis",
+        "Comércio varejista de combustíveis para veículos automotores": "Combustíveis"
+      };
+
+      return names[name];
+    }
+
     static tweetFields(): Array<string> {
       // TODO: Export this to development/deployment config file
       return [

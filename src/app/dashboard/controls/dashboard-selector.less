@@ -1,0 +1,33 @@
+@fontName: "Titillium Web";
+@bgColor: #1cb4db;
+
+.dash-buttons {
+  width: 95%;
+  margin-bottom: 10px;
+}
+
+.dash-title {
+  text-transform: uppercase;
+  color: black;
+  left: 0.5em;
+  font-family: @fontName;
+  font-size: 18pt;
+}
+
+.dash-button {
+  text-transform: uppercase;
+  width: 50%;
+  background: #FFF;
+  color: #ABABAB;
+  left: 10px;
+
+  &.selected {
+    background: @bgColor;
+    color: #FFF;
+  }
+
+  &:hover {
+    background: @bgColor;
+    color: #FFF;
+  }
+}
