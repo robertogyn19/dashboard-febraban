@@ -34,9 +34,18 @@
                     <radius-slider></radius-slider>
                 </div>
             </div>
-            <div class="tab-container" role="tabpanel">
+
+            <hr style="border-color: #D8D8D8;">
+
+            <div class="row container">
+                <dashboard-click></dashboard-click>
+            </div>
+
+            <hr style="border-color: #D8D8D8;">
+
+            <!-- <div class="tab-container" role="tabpanel"> -->
                 <!-- Nav tabs -->
-                <ul class="nav nav-tabs {{ details.selectedHashtag ? 'search-filter' : '' }}" role="navigation">
+                <!-- <ul class="nav nav-tabs {{ details.selectedHashtag ? 'search-filter' : '' }}" role="navigation">
                     <li role="presentation" class="active">
                         <a href="" data-target="#charts2" aria-controls="charts2" role="tab" data-toggle="tab">Charts2</a>
                     </li>
@@ -44,31 +53,10 @@
                     <li role="presentation">
                         <a href="" data-target="#charts1" aria-controls="charts1" role="tab" data-toggle="tab">Charts1</a>
                     </li>
-
-                    <!-- <li role="presentation" class="active">
-                        <a href="" aria-controls="hashtags" role="tab" data-toggle="tab">Hashtags</a>
-                    </li>
-
-                    <li class="filter" ng-show="details.selectedHashtag">
-                        <a href="javascript:">
-                            <span>#{{ details.selectedHashtag.key }}</span>
-                            <button type="button" class="close" ng-click="details.unselect()">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </a>
-                    </li> -->
-                </ul>
+                </ul> -->
 
                 <!-- Tab panes -->
-                <div class="tab-content">
-                    <!-- <div role="tabpanel" class="tab-pane active" id="hashtags" ng-show="details.service.loading">
-                        <div class="row">
-                            <div class="col-md-5 col-md-offset-5">
-                                <i class="loading fa fa-spinner fa-pulse fa-5x"></i>
-                            </div>
-                        </div>
-                    </div> -->
-
+                <!-- <div class="tab-content">
                     <div class="tab-pane" id="charts1" role="tabpanel">
                         <date-histogram-chart buckets="datehisto.buckets"></date-histogram-chart>
                     </div>
@@ -78,17 +66,8 @@
                     </div>
 
                     <hr style="margin-top: 40px;">
-
-                    <!-- <div role="tabpanel" class="tab-pane active" id="hashtags" ng-show="!details.service.loading">
-                        <dashboard-hashtags buckets="details.hashtagResult.buckets" selected-hashtag="details.selectedHashtag"></dashboard-hashtags>
-                    </div> -->
-
-                    <!-- <div role="tabpanel" class="tab-pane" id="tweetList">
-                        <dashboard-tweet-list></dashboard-tweet-list>
-                    </div> -->
-                </div>
-
-            </div>
+                </div> -->
+            <!-- </div> -->
         </div>
     </div>
 

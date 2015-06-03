@@ -44,10 +44,6 @@ module gogeo {
       return "http://maps.demos.gogeo.io/1.0/tools/totalRead";
     }
 
-    static getDateRangeUrl(): string {
-      return "http://maps.demos.gogeo.io/1.0/tools/daterange";
-    }
-
     static getPlaceUrl(place: string): string {
       return "http://maps.demos.gogeo.io/1.0/tools/where/" + place;
     }
@@ -117,11 +113,10 @@ module gogeo {
     }
   }
 
-  var mod = angular.module("gogeo", ["ngRoute", "ngCookies", "angularytics", "linkify", "ngGeolocation", "nvd3", "vr.directives.slider"])
+  var mod = angular.module("gogeo", ["ngRoute", /*"ngCookies", "angularytics", "linkify", "ngGeolocation", */"nvd3", "vr.directives.slider"])
     .config([
       "$routeProvider",
-      "AngularyticsProvider",
-      ($routeProvider: ng.route.IRouteProvider, angularyticsProvider: angularytics.AngularyticsProvider) => {
+      ($routeProvider: ng.route.IRouteProvider) => {
         $routeProvider
           .when("/welcome", {
             controller: "WelcomeController",
@@ -139,17 +134,13 @@ module gogeo {
             redirectTo: "/welcome",
             reloadOnSearch: false
           });
-        if (window.location.hostname.match("gogeo.io")) {
-          angularyticsProvider.setEventHandlers(["Google"]);
-        } else {
-          angularyticsProvider.setEventHandlers(["Console"]);
-        }
+        // if (window.location.hostname.match("gogeo.io")) {
+        //   angularyticsProvider.setEventHandlers(["Google"]);
+        // } else {
+        //   angularyticsProvider.setEventHandlers(["Console"]);
+        // }
       }
-    ]).run(
-      function(Angularytics) {
-        Angularytics.init();
-      }
-    );
+    ]);
 
   export interface INamed {
     $named: string;

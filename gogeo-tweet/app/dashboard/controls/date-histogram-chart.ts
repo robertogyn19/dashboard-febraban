@@ -46,12 +46,6 @@ module gogeo {
       }
     };
 
-    config: any = {
-      autorefresh: false,
-      refreshDataOnly: true,
-      debounce: 200
-    }
-
     constructor(
       private $scope:   ng.IScope,
       private $timeout: ng.ITimeoutService,

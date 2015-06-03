@@ -10,7 +10,7 @@ var gogeo;
         "api.url": "cluster.local.io:9090/",
         "tile.url": "cluster.local.io:9090/",
         "subdomains": [],
-        "collection": "transactions_2"
+        "collection": "crimes_1"
     };
 })(gogeo || (gogeo = {}));
 //# sourceMappingURL=development.js.map

@@ -22,8 +22,6 @@ module gogeo {
         }
 
         initialize() {
-            this.service.hashtagResultObservable
-                .subscribeAndApply(this.$scope, result => this.handleResult(result));
         }
 
         handleResult(result : IHashtagResult) {
@@ -35,7 +33,6 @@ module gogeo {
 
         unselect() {
             this.selectedHashtag = null;
-            this.service.updateHashtagBucket(null);
         }
     }
 

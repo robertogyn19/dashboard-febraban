@@ -22,13 +22,6 @@ module gogeo {
         }
 
         initialize() {
-            this.service.dateLimitObservable
-                .subscribeAndApply(this.$scope, (result: any) => {
-                    if (result) {
-                        this.min = moment(new Date(result["min"])).format("MM/DD/YYYY");
-                        this.max = moment(new Date(result["max"])).format("MM/DD/YYYY");
-                    }
-            });
         }
     }
 

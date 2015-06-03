@@ -4,20 +4,23 @@ module gogeo {
   export class RadiusSliderController {
     static $inject = [
       "$scope",
-      "$timeout"
+      "$timeout",
+      DashboardService.$named
     ];
 
-    radius: number = 4.5;
+    radius: number = 0.5;
     radiusObservale: Rx.BehaviorSubject<number> = new Rx.BehaviorSubject<number>(0);
 
     constructor(
       private $scope:   ng.IScope,
-      private $timeout: ng.ITimeoutService) {
+      private $timeout: ng.ITimeoutService,
+      private service:  DashboardService) {
+
       Rx.Observable
         .merge<any>(this.radiusObservale)
         .throttle(200)
         .subscribe(() => {
-          console.log("subcribe", this.radius);
+          this.service.updateRadius(this.radius);
         });
     }
 
@@ -36,10 +39,10 @@ module gogeo {
           <slider
               ng-model="slider.radius"
               ng-change="slider.updateRadius()"
-              floor="1"
-              ceiling="10"
+              floor="0.1"
+              ceiling="5"
               precision="1"
-              step="0.5">
+              step="0.1">
           </slider>
         </div>
       `,

@@ -1,5 +1,5 @@
 <div id="map-container" class="dashboard-map-container">
-  <div class="leaflet-control" style="top: 175px; left: 10px; position: absolute;">
+  <div class="leaflet-control" style="top: 67px; left: 10px; position: absolute;" ng-show="false">
     <div class="data-type-button-section">
       <div class="leaflet-draw leaflet-bar">
         <a ng-show="map.baseLayerSelected == 'day'"
@@ -7,7 +7,7 @@
            role="button"
            title="Click to see a night map"
            href="javascript:"
-           style="padding-top: 3px;"
+           style="padding-top: 3px; padding-left: 6px;"
            ng-click="map.switchBaseLayer()">
           <i class="fa fa-moon-o fa-lg"></i>
         </a>
@@ -16,7 +16,7 @@
            role="button"
            title="Click to see a day map"
            href="javascript:"
-           style="padding-top: 3px;"
+           style="padding-top: 3px; padding-left: 6px;"
            ng-click="map.switchBaseLayer()">
           <i class="fa fa-sun-o fa-lg"></i>
         </a>
@@ -91,9 +91,9 @@
       <li id="intensity" ng-click="map.changeMapType($event)" class="{{ map.mapSelected == 'intensity' ? 'active' : 'inactive' }}">
         INTENSITY
       </li>
-      <li id="thematic" ng-click="map.changeMapType($event)" class="{{ map.mapSelected == 'thematic' ? 'active' : 'inactive' }}">
+      <!-- <li id="thematic" ng-click="map.changeMapType($event)" class="{{ map.mapSelected == 'thematic' ? 'active' : 'inactive' }}">
         THEMATIC
-      </li>
+      </li> -->
     </ul>
 
     <ul class="list-inline draw-item" ng-show="false">

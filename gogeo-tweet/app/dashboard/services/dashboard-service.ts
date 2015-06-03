@@ -34,6 +34,7 @@ module gogeo {
     private _lastMapType: string = null;
     private _lastMapBase: string = null;
     private _loading: boolean = true;
+    private _lastRadius: number = 0;
 
     private worldBound: IGeom = {
       type: "Polygon",
@@ -64,16 +65,10 @@ module gogeo {
     };
 
     _geomSpaceObservable = new Rx.BehaviorSubject<IGeomSpace>(null);
-    _hashtagFilterObservable = new Rx.BehaviorSubject<IBucket>(null);
-    _somethingTermsObservable = new Rx.BehaviorSubject<string[]>([]);
-    _placeObservable = new Rx.BehaviorSubject<string>(null);
-    _hashtagResultObservable = new Rx.BehaviorSubject<IHashtagResult>(null);
     _dateRangeObservable = new Rx.BehaviorSubject<IDateRange>(null);
     _lastQueryObservable = new Rx.BehaviorSubject<any>(null);
     _tweetObservable = new Rx.BehaviorSubject<Array<ITweet>>(null);
-    _dateLimitObservable = new Rx.BehaviorSubject<any>(null);
-    _placeBoundObservable = new Rx.BehaviorSubject<L.LatLngBounds>(null);
-    _loadParamsObservable = new Rx.BehaviorSubject<any>(null);
+    _lastCircleObservable = new Rx.BehaviorSubject<L.LatLng>(null);
 
     constructor(private $q:       ng.IQService,
           private $http:      ng.IHttpService,
@@ -82,16 +77,6 @@ module gogeo {
           private $routeParams:   ng.route.IRouteParamsService) {
 
       this.initialize();
-      this.getDateRange();
-      this.loadParams();
-    }
-
-    private loadParams() {
-      this._loadParamsObservable.onNext(this.$routeParams);
-
-      this.$timeout(() => {
-        this.$location.search({});
-      }, 200);
     }
 
     get loading(): boolean {
@@ -106,56 +91,19 @@ module gogeo {
       return this._geomSpaceObservable;
     }
 
-    get hashtagResultObservable():Rx.Observable<IHashtagResult> {
-      return this._hashtagResultObservable;
-    }
-
-    get hashtagFilterObservable():Rx.Observable<IBucket> {
-      return this._hashtagFilterObservable;
-    }
-
     get queryObservable():Rx.Observable<any> {
       return this._lastQueryObservable;
     }
 
-    get dateRangeObsersable():Rx.Observable<IDateRange> {
-      return this._dateRangeObservable;
-    }
-
-    get somethingTermsObservable():Rx.BehaviorSubject<string[]> {
-      return this._somethingTermsObservable;
-    }
-
-    get placeObservable():Rx.BehaviorSubject<string> {
-      return this._placeObservable;
+    get circleObservable():Rx.Observable<L.LatLng> {
+      return this._lastCircleObservable;
     }
 
     get tweetObservable():Rx.BehaviorSubject<Array<ITweet>> {
       return this._tweetObservable;
     }
 
-    get dateLimitObservable():Rx.BehaviorSubject<any> {
-      return this._dateLimitObservable;
-    }
-
-    get placeBoundObservable():Rx.BehaviorSubject<L.LatLngBounds> {
-      return this._placeBoundObservable;
-    }
-
-    get loadParamsObservable():Rx.BehaviorSubject<any> {
-      return this._loadParamsObservable;
-    }
-
     initialize() {
-      Rx.Observable
-        .merge<any>(this._geomSpaceObservable, this._hashtagFilterObservable, this._dateRangeObservable)
-        .throttle(400)
-        .subscribe(() => this.search());
-
-      Rx.Observable
-        .merge<any>(this._somethingTermsObservable, this._placeObservable)
-        .throttle(800)
-        .subscribe(() => this.search());
     }
 
     private calculateNeSW(bounds: L.LatLngBounds) {
@@ -185,97 +133,34 @@ module gogeo {
       }
     }
 
-    createShareLink(type: string) {
-      var url = "?share";
-
-      // if (this._lastPlaceString && this._lastPlaceCode) {
-      //   url = url + "&where=" + this._lastPlaceString;
-      // } else {
-      //   if (this._lastMapCenter) {
-      //     var point = this._lastMapCenter;
-      //     var lat = point.lat.toFixed(2);
-      //     var lng = point.lng.toFixed(2);
-      //     url = url + "&center=" + lat + "," + lng;
-      //   }
-
-      //   if (this._lastMapZoom) {
-      //     url = url + "&zoom=" + this._lastMapZoom;
-      //   }
-      // }
-
-      // if (this._lastDateRange.start) {
-      //   var dateFormatted = moment(this._lastDateRange.start).format("MM/DD/YYYY");
-      //   url = url + "&startDate=" + dateFormatted;
-      // }
-
-      // if (this._lastDateRange.end) {
-      //   var dateFormatted = moment(this._lastDateRange.end).format("MM/DD/YYYY");
-      //   url = url + "&endDate=" + dateFormatted;
-      // }
-
-      // if (this._lastSomethingTerms) {
-      //   var terms = [];
-      //   for (var index in this._lastSomethingTerms) {
-      //     var term = this._lastSomethingTerms[index];
-      //     term = term.replace("#", "%23");
-      //     terms.push(term);
-      //   }
-      //   url = url + "&what=" + terms.join(" ");
-      // }
-
-      // if (this._lastMapType) {
-      //   url = url + "&type=" + this._lastMapType;
-      // }
-
-      // if (this._lastMapBase) {
-      //   url = url + "&baseLayer=" + this._lastMapBase;
-      // }
-
-      // url = "http://twittermap.gogeo.io/app/#/dashboard" + url;
-      // var shortenUrl = Configuration.getShortenUrl() + "?url=" + encodeURIComponent(url);
-
-      // this.$http.get(shortenUrl).then((result: any) => {
-      //   var tweetUrl = result.data["data"]["url"];
-      //   this.openShare(type, tweetUrl);
-      // }, (data: any) => {
-      //   this.openShare(type, url);
-      // });
-
-      return url;
+    getRadius(): number {
+      return this._lastRadius;
     }
 
-    openShare(type: string, url: string) {
-      // if (type === "twitter") {
-      //   this.twitterShare(url);
-      // } else if (type === "facebook") {
-      //   this.facebookShare(url);
-      // }
+    updateRadius(radius: number) {
+      this._lastRadius = radius;
     }
 
-    twitterShare(url: string) {
-      // var params = [
-      //   "url=" + encodeURIComponent(url),
-      //   "via=gogeo_io",
-      //   "hashtags=gogeo,gogeo_io,twittermap",
-      //   "text=" + encodeURIComponent("Check out the live tweets on the map")
-      // ];
-      // var url = 'http://twitter.com/share?' + params.join("&");
-      // var sharePopOptions = 'height=450, width=550, top='+($(window).height()/2 - 225) +', left='+$(window).width()/2 +', toolbar=0, location=0, menubar=0, directories=0, scrollbars=0';
-      // window.open(url, 'twitterwindow', sharePopOptions);
+    loadGeoJson() {
+      return this.$http.get("san-francisco.geo.json");
     }
 
-    facebookShare(url: string) {
-      // var params = [
-      //   "app_id=873202776080901",
-      //   "sdk=joey",
-      //   "u=" + encodeURIComponent(url),
-      //   "display=popup",
-      //   "ref=plugin",
-      //   "src=share_button"
-      // ];
-      // var url = 'https://www.facebook.com/sharer/sharer.php?' + params.join("&");
-      // var sharePopOptions = 'height=450, width=650, top='+($(window).height()/2 - 225) +', left='+$(window).width()/2 +', toolbar=0, location=0, menubar=0, directories=0, scrollbars=0';
-      // window.open(url, 'facebookwindow', sharePopOptions);
+    updateDashboardData(point: L.LatLng) {
+      this._lastCircleObservable.onNext(point);
+    }
+
+    getDashboardData(latlng: L.LatLng) {
+      var radius = this._lastRadius;
+
+      var geom = <IPoint>{
+        type: "Point",
+        coordinates: [
+          latlng.lng, latlng.lat
+        ]
+      };
+
+      var geoagg = new GogeoGeoagg(this.$http, geom, "category", radius);
+      return geoagg;
     }
 
     updateGeomSpace(geom: IGeomSpace) {
@@ -293,73 +178,13 @@ module gogeo {
       }
     }
 
-    updateHashtagBucket(bucket: IBucket) {
-      this._loading = true;
-      this._lastHashtagFilter = bucket;
-      this._hashtagFilterObservable.onNext(bucket);
-    }
-
-    updateSomethingTerms(terms: string[]) {
-      this._loading = true;
-      this._lastSomethingTerms = terms;
-      this._somethingTermsObservable.onNext(terms);
-    }
-
-    updatePlace(place: string) {
-      if (place) {
-        this._lastPlaceString = place;
-      } else {
-        this._lastPlaceString = null;
-      }
-
-      this._placeObservable.onNext(this._lastPlaceString);
-    }
-
-    updateDateRange(startDate: Date, endDate: Date) {
-      var dateRange: IDateRange = null;
-
-      if (startDate || endDate) {
-        dateRange = { start: startDate, end: endDate };
-      }
-
-      this._lastDateRange = dateRange;
-      this._dateRangeObservable.onNext(dateRange);
-    }
-
-    updateMapCenter(mapCenter: L.LatLng) {
-      this._lastMapCenter = mapCenter;
-    }
-
-    updateMapZoom(mapZoom: number) {
-      this._lastMapZoom = mapZoom;
-    }
-
-    updateMapType(mapType: string) {
-      this._lastMapType = mapType;
-    }
-
-    updateMapBase(mapBase: string) {
-      this._lastMapBase = mapBase;
-    }
-
-
     getTweet(latlng: L.LatLng, zoom: number, thematicQuery?: ThematicQuery) {
       return this.getTweetData(latlng, zoom, thematicQuery);
-    }
-
-    getDateRange() {
-      if (!this.$location.search()["startDate"] && !this.$location.search()["endDate"]) {
-        this.$http.get(Configuration.getDateRangeUrl()).then((result: any) => {
-          this._dateLimitObservable.onNext(result.data);
-        });
-      }
     }
 
     getDateHistogramAggregation() {
       var url = Configuration.makeUrl("aggregations", "date_histogram");
       var q = this.composeQuery().requestData.q;
-
-      // console.log("->", JSON.stringify(q, null, 2));
 
       var options = {
         params: {
@@ -408,36 +233,11 @@ module gogeo {
       this._loading = true;
 
       var query = this.composeQuery();
-
-      query.execute(
-        (result) => {
-          this._loading = false;
-          this._hashtagResultObservable.onNext(result);
-        }
-      );
-
       this._lastQueryObservable.onNext(query.requestData.q);
     }
 
     composeQuery(): DashboardQuery {
       var query = new DashboardQuery(this.$http, this._lastGeomSpace);
-
-      if (this._lastHashtagFilter) {
-        query.filterByHashtag(this._lastHashtagFilter);
-      }
-
-      if (this._lastSomethingTerms.length > 0) {
-        query.filterBySearchTerms(this._lastSomethingTerms);
-      }
-
-      if (this._lastPlaceString) {
-        query.filterByPlace(this._lastPlaceString);
-      }
-
-      if (this._lastDateRange) {
-        query.filterByDateRange(this._lastDateRange);
-      }
-
       return query;
     }
   }
