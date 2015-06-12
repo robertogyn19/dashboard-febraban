@@ -129,6 +129,10 @@ module gogeo {
                         this.$cookies["gogeo.shareLocation"] = false;
                     }
                     this.setGeoLocation();
+                } else {
+                    var latitude = -16.6700841;
+                    var longitude = -49.2845389;
+                    this.centerMap(latitude, longitude);
                 }
             }
         }
