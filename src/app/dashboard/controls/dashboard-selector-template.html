@@ -35,6 +35,44 @@
   </div>
 </div>
 
-<div class="container" ng-show="selector.selectedTop">
-  <h3>Top 10 municípios com fraudes</h3>
+<div class="row-fluid" ng-show="selector.selectedTop">
+  <div class="row">
+    <div class="col-md-12">
+      <h3>Top 10 municípios com fraudes</h3>
+      <table class="table table-condensed table-hover">
+        <thead>
+          <tr>
+            <th style="width: 10%; color: #35ccf1;">
+              #
+            </th>
+            <th style="width: 60%; color: #35ccf1;">
+              MUNICÍPIOS
+            </th>
+            <th style="width: 30%; text-align: right; color: #35ccf1;">
+              VALOR R$
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="item in selector.topData">
+            <td>
+              {{item.rank}}
+            </td>
+            <td>
+              {{item.key}}
+            </td>
+            <td style="text-align: right;">
+              {{item.sum | currency}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-11">
+      <h4>Share de Fraudes nos municípios</h4>
+      <nvd3 options="selector.pieChartOptions" data="selector.pieChartDataTop"></nvd3>
+    </div>
+  </div>
 </div>

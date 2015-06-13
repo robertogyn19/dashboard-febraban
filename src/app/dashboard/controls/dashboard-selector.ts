@@ -12,6 +12,7 @@ module gogeo {
 
     selectedDash: boolean = true;
     selectedTop: boolean = false;
+    topData: Array<any> = [];
     dateHistoData: Array<any> = [];
     dateHistoOptions: any = {
       chart: {
@@ -47,13 +48,18 @@ module gogeo {
     };
 
     pieChartData: Array<any> = [];
+    pieChartDataTop: Array<any> = [];
     pieChartOptions: any = {
       chart: {
         type: "pieChart",
         height: 500,
         width: 400,
         x: function(d) {
-          return Configuration.getReducedName(d["key"]);
+          if (Configuration.getReducedName(d["key"])){
+            return Configuration.getReducedName(d["key"]);
+          } else {
+            return d["key"];
+          }
         },
         y: function(d) {
           return d["count"];
@@ -127,6 +133,31 @@ module gogeo {
           count: 1
         }
       ];
+
+      this.service.queryObservable
+        .where(q => q != null)
+        .throttle(400)
+        .subscribe((query) => this.getTopData());
+
+      this.getTopData();
+    }
+
+    getTopData() {
+      this.service.getTopData().success((result: Array<any>) => {
+        if (result && result.length > 0) {
+          result.sort(function(obj1, obj2) {
+            return obj2.sum - obj1.sum;
+          });
+          for (var i = 0; i < 10; i++) {
+            result[i]["rank"] = (i+1);
+            this.topData[i] = result[i];
+            this.pieChartDataTop[i] = {
+              key: result[i].key,
+              count: result[i].sum
+            };
+          };
+        }
+      });
     }
 
     selectButton() {
