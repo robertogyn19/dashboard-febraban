@@ -7,10 +7,10 @@
   </button>
 </div>
 
-<div class="container" ng-show="selector.selectedDash">
+<div class="container" style="width: 100%;" ng-show="selector.selectedDash">
   <div class="row-fluid">
     <div class="row">
-      <h4>Transações fraudulentas/Período</h4>
+      <h4 class="date-histo-title">Transações fraudulentas por dia</h4>
 
       <div class="col-md-10">
         <nvd3 options="selector.dateHistoOptions" data="selector.dateHistoData"></nvd3>
@@ -20,16 +20,42 @@
 
   <div class="row-fluid">
     <div class="row">
-      <hr style="margin-left: 0px; width: 38%; border-color: black;">
-      <h4>Volume de Fraudes (R$) Diário</h4>
+      <div class="col-md-12">
+        <div class="row volume-by-period">
+          <h4 class="period-title">Volume de Fraudes (R$) / Período</h4>
+          <div class="row">
+            <div class="col-md-6" style="margin-bottom: 10px;">
+              <span class="period-value">{{ selector.periodData["manhã"]["sum"] | currency }}</span>
+              <br>
+              <span class="period-label">manhã</span>
+            </div>
+            <div class="col-md-6">
+              <span class="period-value">{{ selector.periodData["tarde"]["sum"] | currency }}</span>
+              <br>
+              <span class="period-label">tarde</span>
+            </div>
+          </div>
 
-      <hr style="margin-left: 0px; width: 38%; border-color: black;">
+          <div class="row">
+            <div class="col-md-6" style="margin-bottom: 10px;">
+              <span class="period-value">{{ selector.periodData["noite"]["sum"] | currency }}</span>
+              <br>
+              <span class="period-label">noite</span>
+            </div>
+            <div class="col-md-6">
+              <span class="period-value">{{ selector.getTotalTransactions() }}</span>
+              <br>
+              <span class="period-label">Transações</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
   <div class="row-fluid">
     <div class="row">
-      <h4>Share de Fraudes por estabelecimento</h4>
+      <h4 class="frauds-pie-chart-title">Share de Fraudes por estabelecimento</h4>
       <nvd3 options="selector.pieChartOptions" data="selector.pieChartData"></nvd3>
     </div>
   </div>
@@ -46,7 +72,7 @@
               #
             </th>
             <th style="width: 60%; color: #35ccf1;">
-              MUNICÍPIOS
+              MUNICÍPIO
             </th>
             <th style="width: 30%; text-align: right; color: #35ccf1;">
               VALOR R$
@@ -72,7 +98,7 @@
   <div class="row">
     <div class="col-md-11">
       <h4>Share de Fraudes nos municípios</h4>
-      <nvd3 options="selector.pieChartOptions" data="selector.pieChartDataTop"></nvd3>
+      <nvd3 options="selector.pieChartOptions" data="selector.topData"></nvd3>
     </div>
   </div>
 </div>

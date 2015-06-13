@@ -12,7 +12,7 @@ var gogeo;
         "api.url": "maps.demos.gogeo.io/1.0/",
         "tile.url": "maps.demos.gogeo.io/1.0/",
         "subdomains": [],
-        "collection": "finance"
+        "collection": "financial"
     };
 })(gogeo || (gogeo = {}));
 //# sourceMappingURL=development.js.map

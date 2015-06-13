@@ -74,7 +74,7 @@ gulp.task("bundleCSS", function() {
         fromBower("font-awesome/css/font-awesome.css"),
         fromBower("mapbox.js/mapbox.css"),
         fromBower("leaflet-draw/dist/leaflet.draw.css"),
-        fromBower("nvd3/nv.d3.min.css"),
+        fromBower("nvd3/nv.d3.css"),
         "./lib/css/MarkerCluster.css",
         "./lib/css/MarkerCluster.Default.css",
         "app/**/*.css"
@@ -110,6 +110,7 @@ gulp.task("bundleCoreJS", function() {
         fromBower("d3/d3.min.js"),
         fromBower("nvd3/nv.d3.min.js"),
         fromBower("angular-nvd3/dist/angular-nvd3.min.js"),
+        fromBower("angular-capitalize-filter/capitalize.min.js"),
         "app/shared/support/rx-angular.js",
         "app/shared/support/utilities.js",
         "./lib/js/leaflet.tilecluster.js",

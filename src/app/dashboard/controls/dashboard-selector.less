@@ -20,6 +20,7 @@
   background: #FFF;
   color: #ABABAB;
   left: 10px;
+  border-color: #ABABAB;
 
   &.selected {
     background: @bgColor;
@@ -30,4 +31,26 @@
     background: @bgColor;
     color: #FFF;
   }
+}
+
+.volume-by-period {
+  border-color: black;
+  border-top: 1px dashed #000;
+  border-bottom: 1px dashed #000;
+  background-color: #DFDFDF;
+  margin-top: 10px;
+}
+
+.period-value {
+  font-weight: bold;
+}
+
+.period-label {
+  text-transform: uppercase;
+  color: @bgColor;
+  font-weight: bold;
+}
+
+.date-histo-title, .period-title, .frauds-pie-chart-title {
+  text-transform: uppercase;
 }

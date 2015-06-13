@@ -82,7 +82,6 @@ module gogeo {
           private $routeParams:   ng.route.IRouteParamsService) {
 
       this.initialize();
-      this.getDateRange();
       this.loadParams();
     }
 
@@ -132,10 +131,6 @@ module gogeo {
 
     get tweetObservable():Rx.BehaviorSubject<Array<ITweet>> {
       return this._tweetObservable;
-    }
-
-    get dateLimitObservable():Rx.BehaviorSubject<any> {
-      return this._dateLimitObservable;
     }
 
     get placeBoundObservable():Rx.BehaviorSubject<L.LatLngBounds> {
@@ -258,16 +253,13 @@ module gogeo {
       var url = Configuration.makeUrl("aggregations", "stats");
       var q = this.composeQuery().requestData.q;
 
-      var geom = {
-        "type": "Polygon",
-        "coordinates": this._lastGeomSpace.coordinates
-      };
+      var geom = this.getGeom();
 
       var options = {
         params: {
           mapkey: Configuration.getMapKey(),
           field: "value",
-          group_by: "sum,city",
+          group_by: "sum,city.raw",
           q: JSON.stringify(q),
           geom: JSON.stringify(geom)
         }
@@ -279,17 +271,24 @@ module gogeo {
       return this.getTweetData(latlng, zoom, thematicQuery);
     }
 
-    getDateRange() {
-      if (!this.$location.search()["startDate"] && !this.$location.search()["endDate"]) {
-        this.$http.get(Configuration.getDateRangeUrl()).then((result: any) => {
-          this._dateLimitObservable.onNext(result.data);
-        });
+    getGeom() {
+      var geom = {};
+
+      if (this._lastGeomSpace) {
+        geom = {
+          type: "Polygon",
+          coordinates: this._lastGeomSpace.coordinates
+        };
       }
+
+      return geom;
     }
 
     getDateHistogramAggregation() {
       var url = Configuration.makeUrl("aggregations", "date_histogram");
       var q = this.composeQuery().requestData.q;
+
+      var geom = this.getGeom();
 
       var options = {
         params: {
@@ -297,11 +296,48 @@ module gogeo {
           field: Configuration.getDateField(),
           interval: Configuration.getInterval(),
           date_format: "YYYY-MM-DD",
+          summary: "value",
+          geom: JSON.stringify(geom),
           q: JSON.stringify(q)
         }
       };
 
       return this.$http.get<Array<IDateHistogram>>(url, options);
+    }
+
+    getStatsAggregationSummary() {
+      var field = Configuration.getAggChartField();
+      var groupBy = Configuration.getSummaryGroupBy();
+
+      return this.getStatsAggregation(field, groupBy)
+    }
+
+    getStatsAggregationTypeEstab() {
+      var field = Configuration.getAggChartField();
+      var groupBy = Configuration.getTypeEstabGroupBy();
+
+      return this.getStatsAggregation(field, groupBy)
+    }
+
+    getStatsAggregation(field: string, groupBy: string) {
+      var url = Configuration.makeUrl("aggregations", "stats");
+      var q = this.composeQuery().requestData.q;
+
+      // console.log("-->", JSON.stringify(q, null, 2));
+
+      var geom = this.getGeom();
+
+      var options = {
+        params: {
+          mapkey: Configuration.getMapKey(),
+          field: field,
+          group_by: groupBy,
+          q: JSON.stringify(q),
+          geom: JSON.stringify(geom)
+        }
+      };
+
+      return this.$http.get<Array<IStatsAgg>>(url, options);
     }
 
     private getTweetData(latlng: L.LatLng, zoom: number, thematicQuery?: ThematicQuery) {

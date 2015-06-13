@@ -84,6 +84,22 @@ module gogeo {
       return "place_type"; 
     }
 
+    static getAggChartField(): string {
+      // TODO: Export this to development/deployment config file
+      return "value"; 
+    }
+
+    static getSummaryGroupBy(): string {
+      // TODO: Export this to development/deployment config file
+      // return "sum,period"; 
+      return "period"; 
+    }
+
+    static getTypeEstabGroupBy(): string {
+      // TODO: Export this to development/deployment config file
+      return "sum,typeestab.raw"; 
+    }
+
     static getAggSize(): number {
       // TODO: Export this to development/deployment config file
       return 0;
@@ -99,11 +115,21 @@ module gogeo {
       return "demos";
     }
 
+    static getStartDate(): string {
+      // TODO: Export this to development/deployment config file
+      return "04/21/2015";
+    }
+
+    static getEndDate(): string {
+      // TODO: Export this to development/deployment config file
+      return "05/29/2015";
+    }
+
     static getReducedName(name: string): string {
       var names = {
         "Comércio varejista de produtos alimentícios, bebidas e fumo": "Alimentícios",
         "Comércio varejista de equipamentos de informática e comunicação; equipamentos e artigos de uso doméstico": "Informática",
-        "Restaurantes e outros serviços de alimentação e bebidas": "Alimentação",
+        "Restaurantes e outros serviços de alimentação e bebidas": "Bares e Restaurantes",
         "Comércio varejista de material de construção": "Construção",
         "Comércio varejista de produtos farmacêuticos, perfumaria e cosméticos e artigos médicos, ópticos e ortopédicos": "Farmacêuticos",
         "Hotéis e similares": "Hotéis",
@@ -116,22 +142,24 @@ module gogeo {
     static tweetFields(): Array<string> {
       // TODO: Export this to development/deployment config file
       return [
-        "name",
-        "amount",
-        "company_name",
-        "type",
-        "place_type",
-        "installment",
-        "installments",
-        "card_brand",
-        "cnae",
-        "cnae_label",
-        "date"
+        "people",
+        "address",
+        "value",
+        "typepay",
+        "payway",
+        "typeestab",
+        "flag",
+        "nameestab",
+        Configuration.getDateField(),
+        "city",
+        "state",
+        "cnpj",
+        "status"
       ];
     }
   }
 
-  var mod = angular.module("gogeo", ["ngRoute", "ngCookies", "angularytics", "linkify", "ngGeolocation", "nvd3"])
+  var mod = angular.module("gogeo", ["ngRoute", "ngCookies", "angularytics", "linkify", "ngGeolocation", "nvd3", "angular-capitalize-filter"])
     .config([
       "$routeProvider",
       "AngularyticsProvider",

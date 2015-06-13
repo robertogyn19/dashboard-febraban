@@ -34,7 +34,7 @@ module gogeo {
         geom: this.geom,
         limit: this.limit,
         buffer: this.buffer,
-        buffer_measure: this.buffer_measure,
+        measure_buffer: this.buffer_measure,
         fields: this.fields,
         q: this.q,
         mapkey: Configuration.getMapKey()

@@ -10,7 +10,15 @@ module gogeo {
         q: {
           query: {
             bool: {
-              must: []
+              must: [
+                {
+                  match: {
+                    fraud: {
+                      query: "yes"
+                    }
+                  }
+                }
+              ]
             }
           }
         }

@@ -26,6 +26,30 @@ module gogeo {
     buckets: Array<IBucket>;
   }
 
+  export interface IStatsAgg {
+    key: string;
+  }
+
+  export interface IStatsSumAgg extends IStatsAgg {
+    sum: number;
+  }
+
+  export interface IStatsCountAgg extends IStatsAgg {
+    count: number;
+  }
+
+  export interface IStatsAvgAgg extends IStatsAgg {
+    avg: number;
+  }
+
+  export interface IStatsAllAgg extends IStatsAgg {
+    avg: number;
+    min: number;
+    max: number;
+    sum: number;
+    count: number;
+  }
+
   export interface ITweet {
     created_at: string;
     id: string;

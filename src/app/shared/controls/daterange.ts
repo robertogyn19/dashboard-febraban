@@ -7,73 +7,66 @@
 
 module gogeo {
 
-    class DataRangeController {
-        static $inject = [
-            "$scope",
-            DashboardService.$named
-        ];
+  class DataRangeController {
+    static $inject = [
+      "$scope",
+      DashboardService.$named
+    ];
 
-        min: string = null;
-        max: string = null;
+    min: string = null;
+    max: string = null;
 
-        constructor(
-            private $scope: ng.IScope,
-            private service: DashboardService) {
-        }
-
-        initialize() {
-            this.service.dateLimitObservable
-                .subscribeAndApply(this.$scope, (result: any) => {
-                    if (result) {
-                        this.min = moment(new Date(result["min"])).format("MM/DD/YYYY");
-                        this.max = moment(new Date(result["max"])).format("MM/DD/YYYY");
-                    }
-            });
-        }
+    constructor(
+      private $scope: ng.IScope,
+      private service: DashboardService) {
     }
 
-    registerDirective("daterange",  () => {
-        return {
-            restrict: "E",
-            template: `
-                <div class="input-group daterange">
-                    <input 
-                        id="startRange"
-                        class="form-control"
-                        type="text"
-                        data-provide="datepicker"
-                        data-date-clear-btn="true"
-                        data-date-start-date="{{range.min}}"
-                        data-date-end-date="{{range.max}}"
-                        data-date-autoclose="true"
-                        ng-model="startDate"/>
-                    <span class="input-group-addon">
-                        <i class="glyphicon glyphicon-calendar"></i>
-                    </span>
-                    <input
-                        id="endRange"
-                        class="form-control"
-                        type="text"
-                        data-provide="datepicker"
-                        data-date-clear-btn="true"
-                        data-date-start-date="{{range.min}}"
-                        data-date-end-date="{{range.max}}"
-                        data-date-autoclose="true"
-                        ng-model="endDate"/>
-                </div>`,
+    initialize() {
+    }
+  }
 
-            scope: {
-                startDate: "=",
-                endDate: "="
-            },
+  registerDirective("daterange",  () => {
+    return {
+      restrict: "E",
+      template: `
+        <div class="input-group daterange">
+          <input 
+            id="startRange"
+            class="form-control"
+            type="text"
+            data-provide="datepicker"
+            data-date-clear-btn="true"
+            data-date-start-date="04/21/2015"
+            data-date-end-date="05/29/2015"
+            data-date-autoclose="true"
+            ng-model="startDate"/>
+          <span class="input-group-addon">
+            <i class="glyphicon glyphicon-calendar"></i>
+          </span>
+          <input
+            id="endRange"
+            class="form-control"
+            type="text"
+            data-provide="datepicker"
+            data-date-clear-btn="true"
+            data-date-start-date="04/21/2015"
+            data-date-end-date="05/29/2015"
+            data-date-autoclose="true"
+            ng-model="endDate"/>
+        </div>`,
 
-            controller: DataRangeController,
-            controllerAs: "range",
+      scope: {
+        startDate: "=",
+        endDate: "="
+      },
 
-            link(scope, element, attrs, controller: DataRangeController) {
-                controller.initialize();
-            }
-        };
-    });
+      controller: DataRangeController,
+      controllerAs: "range",
+
+      link(scope, element, attrs, controller: DataRangeController) {
+        
+      }
+    };
+  });
 
 }

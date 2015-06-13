@@ -33,7 +33,7 @@ module gogeo {
           tickFormat: function(d) {
             return moment(new Date(d)).format("DD/MM");
           },
-          showMaxMin: true,
+          showMaxMin: false,
           rotateLabels: 50,
           margin: {
             top: 50
@@ -41,14 +41,16 @@ module gogeo {
         },
         yAxis: {
           tickFormat: function(d) {
-            return numeral(d / 1000).format("$ 0,0.00");
+            return numeral(d / 1000).format("0,0.00");
+          },
+          margin: {
+            left: 25
           }
         }
       }
     };
 
     pieChartData: Array<any> = [];
-    pieChartDataTop: Array<any> = [];
     pieChartOptions: any = {
       chart: {
         type: "pieChart",
@@ -62,11 +64,15 @@ module gogeo {
           }
         },
         y: function(d) {
-          return d["count"];
+          return d["sum"];
+        },
+        valueFormat: function(d) {
+          return numeral(d).format("R$ 0,0.00");
         },
         showLabels: false,
         transitionDuration: 500,
         labelThreshold: 0.01,
+        donut: true,
         legend: {
           key: function(d) {
             return d["x"];
@@ -81,6 +87,21 @@ module gogeo {
       }
     };
 
+    periodData: any = {
+      "manhã": {
+        sum: 0,
+        count: 0
+      },
+      "tarde": {
+        sum: 0,
+        count: 0
+      },
+      "noite": {
+        sum: 0,
+        count: 0
+      }
+    };
+
     constructor(private $scope: ng.IScope,
                 private $interval: ng.IIntervalService,
                 private $filter: ng.IFilterService,
@@ -88,73 +109,93 @@ module gogeo {
 
       this.dateHistoData = [
         {
-          key: "Quantity (x 1000)",
-          bar: false,
-          values: [
-            {
-              x: 1430784000000 + (3 * 3600 * 1000),
-              y: 11373.759899616241
-            },
-            {
-              x: 1430870400000 + (3 * 3600 * 1000),
-              y: 5177.699995994568
-            }
-          ]
+          key: "R$ (x 1000)",
+          type: "line",
+          values: []
         }
       ];
 
-      this.pieChartData = [
-        {
-          key: "Comércio varejista de produtos alimentícios, bebidas e fumo",
-          count: 16
-        },
-        {
-          key: "Comércio varejista de equipamentos de informática e comunicação; equipamentos e artigos de uso doméstico",
-          count: 15
-        },
-        {
-          key: "Restaurantes e outros serviços de alimentação e bebidas",
-          count: 13
-        },
-        {
-          key: "Comércio varejista de material de construção",
-          count: 11
-        },
-        {
-          key: "Comércio varejista de produtos farmacêuticos, perfumaria e cosméticos e artigos médicos, ópticos e ortopédicos",
-          count: 11
-        },
-        {
-          key: "Hotéis e similares",
-          count: 3
-        },
-        {
-          key: "Comércio varejista de combustíveis para veículos automotores",
-          count: 1
-        }
-      ];
+      this.pieChartData = [];
 
       this.service.queryObservable
         .where(q => q != null)
         .throttle(400)
-        .subscribe((query) => this.getTopData());
+        .subscribe((query) => {
+          this.getTopData();
+          this.getDateHistoData();
+          this.getPieChartData();
+          this.getPeriodData();
+        });
 
       this.getTopData();
+      this.getDateHistoData();
+      this.getPieChartData();
+      this.getPeriodData();
+    }
+
+    getTotalTransactions() {
+      var total = 0;
+
+      for (var i in this.periodData) {
+        var item = this.periodData[i];
+        total += item["count"];
+      };
+
+      return total;
+    }
+
+    getPeriodData() {
+      this.service.getStatsAggregationSummary().success((result: Array<IStatsAllAgg>) => {
+        result.forEach((item) => {
+          var pData = this.periodData[item.key];
+
+          pData["count"] = item.count;
+          pData["sum"] = item.sum;
+        });
+      });
+    }
+
+    getPieChartData() {
+      this.service.getStatsAggregationTypeEstab().success((result: Array<IStatsSumAgg>) => {
+        this.pieChartData = result;
+      });
+    }
+
+    getDateHistoData() {
+      this.service.getDateHistogramAggregation().success((result: Array<IDateHistogram>) => {
+        var amountValues = [];
+        this.dateHistoData[0]["values"] = [];
+        result.forEach((item) => {
+          amountValues.push({
+            x: item["timestamp"] + (3 * 3600 * 1000), // Add time offset +3 hours
+            y: item["sum"]
+          });
+        });
+
+        this.dateHistoData[0]["values"] = amountValues;
+      });
     }
 
     getTopData() {
       this.service.getTopData().success((result: Array<any>) => {
+        this.topData = [];
+
         if (result && result.length > 0) {
-          result.sort(function(obj1, obj2) {
-            return obj2.sum - obj1.sum;
-          });
-          for (var i = 0; i < 10; i++) {
-            result[i]["rank"] = (i+1);
+          result.sort(
+            function(obj1, obj2) {
+              return obj2.sum - obj1.sum;
+            }
+          );
+
+          var maxItems = 10;
+
+          if (result.length < maxItems) {
+            maxItems = result.length;
+          }
+
+          for (var i = 0; i < maxItems; i++) {
+            result[i]["rank"] = (i + 1);
             this.topData[i] = result[i];
-            this.pieChartDataTop[i] = {
-              key: result[i].key,
-              count: result[i].sum
-            };
           };
         }
       });
