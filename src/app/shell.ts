@@ -28,7 +28,7 @@ module gogeo {
     static prefixUrl(path: string): string {
       var serverUrl: string = Configuration.apiUrl;
 
-      if (path.match(".*tile.png.*") || path.match(".*cluster.json.*") || path.match(".*aggregations.*")) {
+      if (path.match(".*tile.png.*") || path.match(".*cluster.json.*")) {
         serverUrl = Configuration.tileUrl;
       }
 

@@ -7,11 +7,9 @@ var gogeo;
     // Configurações para DESENVOLVIMENTO LOCAL
     //
     gogeo.settings = {
-        // "api.url": "cluster.local.io:9090/",
-        // "tile.url": "cluster.local.io:9090/",
         "api.url": "maps.demos.gogeo.io/1.0/",
-        "tile.url": "maps.demos.gogeo.io/1.0/",
-        "subdomains": [],
+        "tile.url": "{s}.demos.gogeo.io/1.0/",
+        "subdomains": [ "m01", "m02", "m03", "m04" ],
         "collection": "financial"
     };
 })(gogeo || (gogeo = {}));
