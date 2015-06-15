@@ -16,6 +16,41 @@ module gogeo {
     startDate: string = Configuration.getStartDate();
     endDate: string = Configuration.getEndDate();
     dateFormat: string = "MM/DD/YYYY";
+    citiesToSearch: Array<any> = Configuration.getPlacesToSearch();
+    estabOptions: Array<any> = [
+      {
+        value: "",
+        label: "Todos estabelecimentos"
+      },
+      { 
+        value: "Restaurantes e outros serviços de alimentação e bebidas",
+        label: "Restaurantes"
+      },
+      { 
+        value: "Comércio varejista de equipamentos de informática e comunicação; equipamentos e artigos de uso doméstico",
+        label: "Informática"
+      },
+      { 
+        value: "Comércio varejista de produtos alimentícios bebidas e fumo",
+        label: "Alimentos"
+      },
+      { 
+        value: "Comércio varejista de material de construção",
+        label: "Construção"
+      },
+      { 
+        value: "Comércio varejista de produtos farmacêuticos perfumaria e cosméticos e artigos médicos ópticos e ortopédicos",
+        label: "Farmacêuticos"
+      },
+      { 
+        value: "Comércio varejista de combustíveis para veículos automotores",
+        label: "Combustíveis"
+      },
+      {
+        value: "Hotéis e similares",
+        label: "Hotéis"
+      }
+    ];
 
     constructor($scope:     ng.IScope,
           public service: DashboardService) {
@@ -42,6 +77,11 @@ module gogeo {
         .skip(1)
         .throttle(800)
         .subscribe(place => this.service.updatePlace(place));
+
+      this.watchAsObservable<string>("typeEstab")
+        .skip(1)
+        .throttle(800)
+        .subscribe(typeEstab => this.service.updateTypeEstab(typeEstab));
 
       Rx.Observable.merge(this.watchAsObservable<string>("startDate"), this.watchAsObservable<string>("endDate"))
         .skip(1)

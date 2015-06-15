@@ -70,11 +70,11 @@
             <p>{{ map.tweetResult['payway'] }}</p>
           </div>
         </div>
-        <div class="row">
+        <!-- <div class="row">
           <div class="col-md-12">
-            <p>{{ map.tweetResult['cnpj'] }}</p>
+            <p>CNPJ: {{ map.tweetResult['cnpj'] }}</p>
           </div>
-        </div>
+        </div> -->
         <div style="padding-top: 15px; padding-right: 5px; font-size: 12px;">
           <div class="row">
             <div class="col-md-7">
@@ -113,9 +113,6 @@
       <li id="intensity" ng-click="map.changeMapType($event)" class="{{ map.mapSelected == 'intensity' ? 'active' : 'inactive' }}">
         INTENSITY
       </li>
-      <li id="thematic" ng-click="map.changeMapType($event)" class="{{ map.mapSelected == 'thematic' ? 'active' : 'inactive' }}">
-        THEMATIC
-      </li>
     </ul>
 
     <ul class="list-inline draw-item" ng-show="false">
@@ -123,14 +120,4 @@
       </li>
     </ul>
   </div>
-</div>
-
-<div class="thematic-legend" ng-show="map.mapSelected === 'thematic'" style="display: block; float: right; left: 10px; bottom: 10px; position: absolute; color: white; z-index: 10;">
-  <ul class="list-inline">
-    <li class="{{ id }} {{ map.layerGroup.hasLayer(layer) ? 'disabled' : '' }}" ng-repeat="(id, layer) in map.thematicMaps" ng-click="map.toggleThematicMap(id, layer)">
-      <strong>
-        {{ id }}
-      </strong>
-    </li>
-  </ul>
 </div>

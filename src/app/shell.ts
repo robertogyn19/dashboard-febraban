@@ -4,6 +4,7 @@
 module gogeo {
 
   export var settings;
+  export var placesToSearch;
 
   export class Configuration {
     static get apiUrl() {
@@ -117,12 +118,16 @@ module gogeo {
 
     static getStartDate(): string {
       // TODO: Export this to development/deployment config file
-      return "04/21/2015";
+      return "05/21/2015";
     }
 
     static getEndDate(): string {
       // TODO: Export this to development/deployment config file
       return "05/29/2015";
+    }
+
+    static getPlacesToSearch() {
+      return <any> placesToSearch;
     }
 
     static getReducedName(name: string): string {
@@ -159,7 +164,7 @@ module gogeo {
     }
   }
 
-  var mod = angular.module("gogeo", ["ngRoute", "ngCookies", "angularytics", "linkify", "ngGeolocation", "nvd3", "angular-capitalize-filter"])
+  var mod = angular.module("gogeo", ["ngRoute", "ngCookies", "angularytics", "linkify", "ngGeolocation", "nvd3", "angular-capitalize-filter", "angucomplete-alt"])
     .config([
       "$routeProvider",
       "AngularyticsProvider",

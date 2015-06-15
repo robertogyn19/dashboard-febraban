@@ -9,10 +9,10 @@ module gogeo {
     //
 
     export var settings = <any>{
-        "api.url": "maps.demos.gogeo.io/v1.0/",
-        "tile.url": "{s}.demos.gogeo.io/1.0/",
+        "api.url": "cluster.local.io:9090/",
+        "tile.url": "{s}.cluster.local.io:9090/",
         "subdomains": [ "m01", "m02", "m03", "m04" ],
-        "collection": "financial"
+        "collection": "transactions_2"
     };
 
 }

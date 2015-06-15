@@ -34,6 +34,7 @@ module gogeo {
     private _lastMapType: string = null;
     private _lastMapBase: string = null;
     private _loading: boolean = true;
+    private _lastTypeEstab: string = null;
 
     private worldBound: IGeom = {
       type: "Polygon",
@@ -72,8 +73,9 @@ module gogeo {
     _lastQueryObservable = new Rx.BehaviorSubject<any>(null);
     _tweetObservable = new Rx.BehaviorSubject<Array<ITweet>>(null);
     _dateLimitObservable = new Rx.BehaviorSubject<any>(null);
-    _placeBoundObservable = new Rx.BehaviorSubject<L.LatLngBounds>(null);
+    _placeBoundObservable = new Rx.BehaviorSubject<L.LatLng>(null);
     _loadParamsObservable = new Rx.BehaviorSubject<any>(null);
+    _lastTypeEstabObservable = new Rx.BehaviorSubject<string>(null);
 
     constructor(private $q:       ng.IQService,
           private $http:      ng.IHttpService,
@@ -133,12 +135,16 @@ module gogeo {
       return this._tweetObservable;
     }
 
-    get placeBoundObservable():Rx.BehaviorSubject<L.LatLngBounds> {
+    get placeBoundObservable():Rx.BehaviorSubject<L.LatLng> {
       return this._placeBoundObservable;
     }
 
     get loadParamsObservable():Rx.BehaviorSubject<any> {
       return this._loadParamsObservable;
+    }
+
+    get lastTypeEstabObservable():Rx.BehaviorSubject<string> {
+      return this._lastTypeEstabObservable;
     }
 
     initialize() {
@@ -148,9 +154,37 @@ module gogeo {
         .subscribe(() => this.search());
 
       Rx.Observable
-        .merge<any>(this._somethingTermsObservable, this._placeObservable)
+        .merge<any>(this._somethingTermsObservable, this._placeObservable, this._lastTypeEstabObservable)
         .throttle(800)
         .subscribe(() => this.search());
+    }
+
+    updateTypeEstab(typeEstab: string) {
+      if(typeEstab) {
+        this._lastTypeEstab = typeEstab;
+      } else {
+        this._lastTypeEstab = null;
+      }
+
+      this._placeObservable.onNext(this._lastTypeEstab);
+    }
+
+    private getBoundOfPlace(placeString: string) {
+      if (placeString) {
+        var place = placeString["originalObject"];
+        var lat = place["lat"];
+        var lon = place["long"];
+
+        var points = L.latLng(lat, lon);
+        this._placeBoundObservable.onNext(points);
+
+        // this._lastPlaceCode = country_code;
+        this._lastPlaceString = place["city"];
+        this._placeObservable.onNext(this._lastPlaceString);
+      } else {
+        this._lastPlaceString = null;
+        this._placeObservable.onNext(this._lastPlaceString);
+      }
     }
 
     private calculateNeSW(bounds: L.LatLngBounds) {
@@ -213,13 +247,7 @@ module gogeo {
     }
 
     updatePlace(place: string) {
-      if (place) {
-        this._lastPlaceString = place;
-      } else {
-        this._lastPlaceString = null;
-      }
-
-      this._placeObservable.onNext(this._lastPlaceString);
+      this.getBoundOfPlace(place);
     }
 
     updateDateRange(startDate: Date, endDate: Date) {
@@ -323,8 +351,6 @@ module gogeo {
       var url = Configuration.makeUrl("aggregations", "stats");
       var q = this.composeQuery().requestData.q;
 
-      // console.log("-->", JSON.stringify(q, null, 2));
-
       var geom = this.getGeom();
 
       var options = {
@@ -402,6 +428,10 @@ module gogeo {
 
       if (this._lastDateRange) {
         query.filterByDateRange(this._lastDateRange);
+      }
+
+      if (this._lastTypeEstab) {
+        query.filterByTypeEstab(this._lastTypeEstab);
       }
 
       return query;

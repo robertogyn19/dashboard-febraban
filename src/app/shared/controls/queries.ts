@@ -130,4 +130,21 @@ module gogeo {
       }
     }
   }
+
+  export class MatchPhraseQuery implements Query {
+
+    constructor(public term: string, public field: string) {}
+
+    build() {
+      var query = {
+        match_phrase: {
+        }
+      }
+      query["match_phrase"][this.field] = {
+        query: this.term
+      };
+      
+      return query;
+    }
+  }
 }
