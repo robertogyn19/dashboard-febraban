@@ -104,7 +104,7 @@ var gogeo;
         };
         Configuration.getDatabaseName = function () {
             // TODO: Export this to development/deployment config file
-            return "db1";
+            return "demos";
         };
         Configuration.getStartDate = function () {
             // TODO: Export this to development/deployment config file

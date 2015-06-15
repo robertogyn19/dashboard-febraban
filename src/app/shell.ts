@@ -113,7 +113,7 @@ module gogeo {
 
     static getDatabaseName(): string {
       // TODO: Export this to development/deployment config file
-      return "db1";
+      return "demos";
     }
 
     static getStartDate(): string {
