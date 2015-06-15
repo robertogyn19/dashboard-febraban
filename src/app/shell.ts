@@ -113,7 +113,7 @@ module gogeo {
 
     static getDatabaseName(): string {
       // TODO: Export this to development/deployment config file
-      return "demos";
+      return "db1";
     }
 
     static getStartDate(): string {
@@ -183,7 +183,7 @@ module gogeo {
             reloadOnSearch: false
           })
           .otherwise({
-            redirectTo: "/welcome",
+            redirectTo: "/dashboard",
             reloadOnSearch: false
           });
         if (window.location.hostname.match("gogeo.io")) {

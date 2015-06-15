@@ -104,7 +104,7 @@ var gogeo;
         };
         Configuration.getDatabaseName = function () {
             // TODO: Export this to development/deployment config file
-            return "demos";
+            return "db1";
         };
         Configuration.getStartDate = function () {
             // TODO: Export this to development/deployment config file
@@ -165,7 +165,7 @@ var gogeo;
                 templateUrl: "dashboard/page.html",
                 reloadOnSearch: false
             }).otherwise({
-                redirectTo: "/welcome",
+                redirectTo: "/dashboard",
                 reloadOnSearch: false
             });
             if (window.location.hostname.match("gogeo.io")) {
