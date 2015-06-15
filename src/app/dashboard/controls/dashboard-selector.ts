@@ -7,6 +7,7 @@ module gogeo {
         "$scope",
         "$interval",
         "$filter",
+        "$window",
         DashboardService.$named
     ];
 
@@ -18,7 +19,6 @@ module gogeo {
       chart: {
         type: "lineChart",
         height: 320,
-        width: 400,
         margin : {
           top: 20,
           right: 20,
@@ -54,8 +54,8 @@ module gogeo {
     pieChartOptions: any = {
       chart: {
         type: "pieChart",
-        height: 500,
-        width: 400,
+        height: 400,
+        width: 600,
         x: function(d) {
           if (Configuration.getReducedName(d["key"])){
             return Configuration.getReducedName(d["key"]);
@@ -102,9 +102,16 @@ module gogeo {
       }
     };
 
+    widthHash: any = {
+      1280: 380,
+      1366: 400,
+      1920: 580
+    };
+
     constructor(private $scope: ng.IScope,
                 private $interval: ng.IIntervalService,
                 private $filter: ng.IFilterService,
+                private $window: ng.IWindowService,
                 private service: DashboardService) {
 
       this.dateHistoData = [
@@ -131,6 +138,18 @@ module gogeo {
       this.getDateHistoData();
       this.getPieChartData();
       this.getPeriodData();
+
+      this.$scope.$watch(() => {
+        var width = this.$window.innerWidth;
+        var chartWidth = this.widthHash[width];
+
+        if (!chartWidth) {
+          chartWidth = parseInt((width / 3).toFixed(0)) - 50;
+        }
+
+        this.dateHistoOptions.chart.width = chartWidth;
+        this.pieChartOptions.chart.width = chartWidth;
+      });
     }
 
     getTotalTransactions() {

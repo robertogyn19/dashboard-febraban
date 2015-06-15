@@ -118,12 +118,12 @@ module gogeo {
 
     static getStartDate(): string {
       // TODO: Export this to development/deployment config file
-      return "05/21/2015";
+      return "05/01/2015";
     }
 
     static getEndDate(): string {
       // TODO: Export this to development/deployment config file
-      return "05/29/2015";
+      return "05/08/2015";
     }
 
     static getPlacesToSearch() {

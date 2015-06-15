@@ -108,11 +108,11 @@ var gogeo;
         };
         Configuration.getStartDate = function () {
             // TODO: Export this to development/deployment config file
-            return "05/21/2015";
+            return "05/01/2015";
         };
         Configuration.getEndDate = function () {
             // TODO: Export this to development/deployment config file
-            return "05/29/2015";
+            return "05/08/2015";
         };
         Configuration.getPlacesToSearch = function () {
             return gogeo.placesToSearch;
@@ -40498,8 +40498,7 @@ var gogeo;
             }
         };
         DashboardMapController.prototype.fitMap = function (point) {
-            this.map.setZoom(12);
-            this.map.panTo(point);
+            this.map.setView(point, 8);
         };
         DashboardMapController.prototype.initializeLayer = function () {
             var _this = this;
@@ -40553,13 +40552,12 @@ var gogeo;
                 ]
             };
             var options = {
-                mapOptions: mapOptions,
-                maptiks_id: "night-map"
+                mapOptions: mapOptions
             };
             return new L.Google("ROADMAP", options);
         };
         DashboardMapController.prototype.getDayMap = function () {
-            return new L.Google('ROADMAP', { maptiks_id: "day-map" });
+            return new L.Google('ROADMAP');
         };
         DashboardMapController.prototype.blockPopup = function () {
             this.canOpenPopup = false;
@@ -40632,8 +40630,7 @@ var gogeo;
         DashboardMapController.prototype.createLayers = function () {
             var url = this.configureUrl();
             var options = {
-                subdomains: gogeo.Configuration.subdomains,
-                maptiks_id: this.mapSelected
+                subdomains: gogeo.Configuration.subdomains
             };
             if (["point", "intensity"].indexOf(this.mapSelected) != (-1)) {
                 return [L.tileLayer(url, options)];
@@ -40814,8 +40811,7 @@ var gogeo;
                         minZoom: 4,
                         maxZoom: 18,
                         center: new L.LatLng(37.757836, -122.447041),
-                        zoom: 6,
-                        maptiks_id: "leaflet-map"
+                        zoom: 6
                     };
                     var mapContainerElement = element.find(".dashboard-map-container")[0];
                     var map = L.map("map-container", options);
@@ -40872,11 +40868,12 @@ var gogeo;
 var gogeo;
 (function (gogeo) {
     var DashboardSelectorController = (function () {
-        function DashboardSelectorController($scope, $interval, $filter, service) {
+        function DashboardSelectorController($scope, $interval, $filter, $window, service) {
             var _this = this;
             this.$scope = $scope;
             this.$interval = $interval;
             this.$filter = $filter;
+            this.$window = $window;
             this.service = service;
             this.selectedDash = true;
             this.selectedTop = false;
@@ -40886,7 +40883,6 @@ var gogeo;
                 chart: {
                     type: "lineChart",
                     height: 320,
-                    width: 400,
                     margin: {
                         top: 20,
                         right: 20,
@@ -40921,8 +40917,8 @@ var gogeo;
             this.pieChartOptions = {
                 chart: {
                     type: "pieChart",
-                    height: 500,
-                    width: 400,
+                    height: 400,
+                    width: 600,
                     x: function (d) {
                         if (gogeo.Configuration.getReducedName(d["key"])) {
                             return gogeo.Configuration.getReducedName(d["key"]);
@@ -40968,6 +40964,11 @@ var gogeo;
                     count: 0
                 }
             };
+            this.widthHash = {
+                1280: 380,
+                1366: 400,
+                1920: 580
+            };
             this.dateHistoData = [
                 {
                     key: "R$ (x 1000)",
@@ -40986,6 +40987,15 @@ var gogeo;
             this.getDateHistoData();
             this.getPieChartData();
             this.getPeriodData();
+            this.$scope.$watch(function () {
+                var width = _this.$window.innerWidth;
+                var chartWidth = _this.widthHash[width];
+                if (!chartWidth) {
+                    chartWidth = parseInt((width / 3).toFixed(0)) - 50;
+                }
+                _this.dateHistoOptions.chart.width = chartWidth;
+                _this.pieChartOptions.chart.width = chartWidth;
+            });
         }
         DashboardSelectorController.prototype.getTotalTransactions = function () {
             var total = 0;
@@ -41054,6 +41064,7 @@ var gogeo;
             "$scope",
             "$interval",
             "$filter",
+            "$window",
             gogeo.DashboardService.$named
         ];
         return DashboardSelectorController;

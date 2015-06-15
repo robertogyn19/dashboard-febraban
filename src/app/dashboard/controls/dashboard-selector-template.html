@@ -12,7 +12,7 @@
     <div class="row">
       <h4 class="date-histo-title">Transações fraudulentas por dia</h4>
 
-      <div class="col-md-10">
+      <div class="col-sm-12">
         <nvd3 options="selector.dateHistoOptions" data="selector.dateHistoData"></nvd3>
       </div>
     </div>
@@ -20,32 +20,32 @@
 
   <div class="row-fluid">
     <div class="row">
-      <div class="col-md-12">
+      <div class="col-sm-12">
         <div class="row volume-by-period">
           <h4 class="period-title">Volume de Fraudes (R$) / Período</h4>
           <div class="row">
-            <div class="col-md-6" style="margin-bottom: 10px;">
-              <span class="period-value">{{ selector.periodData["manhã"]["sum"] | currency }}</span>
-              <br>
+            <div class="col-sm-6" style="margin-bottom: 10px;">
               <span class="period-label">manhã</span>
-            </div>
-            <div class="col-md-6">
-              <span class="period-value">{{ selector.periodData["tarde"]["sum"] | currency }}</span>
               <br>
+              <span class="period-value">{{ selector.periodData["manhã"]["sum"] | currency }}</span>
+            </div>
+            <div class="col-sm-6">
               <span class="period-label">tarde</span>
+              <br>
+              <span class="period-value">{{ selector.periodData["tarde"]["sum"] | currency }}</span>
             </div>
           </div>
 
           <div class="row">
-            <div class="col-md-6" style="margin-bottom: 10px;">
-              <span class="period-value">{{ selector.periodData["noite"]["sum"] | currency }}</span>
-              <br>
+            <div class="col-sm-6" style="margin-bottom: 10px;">
               <span class="period-label">noite</span>
-            </div>
-            <div class="col-md-6">
-              <span class="period-value">{{ selector.getTotalTransactions() }}</span>
               <br>
+              <span class="period-value">{{ selector.periodData["noite"]["sum"] | currency }}</span>
+            </div>
+            <div class="col-sm-6">
               <span class="period-label">Transações</span>
+              <br>
+              <span class="period-value">{{ selector.getTotalTransactions() }}</span>
             </div>
           </div>
         </div>
@@ -63,7 +63,7 @@
 
 <div class="row-fluid" ng-show="selector.selectedTop">
   <div class="row">
-    <div class="col-md-12">
+    <div class="col-sm-12">
       <h3>Top 10 municípios com fraudes</h3>
       <table class="table table-condensed table-hover">
         <thead>
@@ -96,7 +96,7 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-md-11">
+    <div class="col-sm-11">
       <h4>Share de Fraudes nos municípios</h4>
       <nvd3 options="selector.pieChartOptions" data="selector.topData"></nvd3>
     </div>
