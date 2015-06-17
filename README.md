@@ -1,7 +1,7 @@
 ### Instalation
 
 ``` shell
-$ cd gogeo-tweet
+$ cd src
 $ npm install
 $ bower install
 $ gulp
