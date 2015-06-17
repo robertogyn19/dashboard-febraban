@@ -141,12 +141,6 @@ module gogeo {
       "$routeProvider",
       ($routeProvider: ng.route.IRouteProvider) => {
         $routeProvider
-          .when("/welcome", {
-            controller: "WelcomeController",
-            controllerAs: "welcome",
-            templateUrl: "welcome/page.html",
-            reloadOnSearch: false
-          })
           .when("/dashboard", {
             controller: "DashboardController",
             controllerAs: "dashboard",
@@ -154,7 +148,7 @@ module gogeo {
             reloadOnSearch: false
           })
           .otherwise({
-            redirectTo: "/welcome",
+            redirectTo: "/dashboard",
             reloadOnSearch: false
           });
       }

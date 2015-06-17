@@ -130,18 +130,13 @@ var gogeo;
     var mod = angular.module("gogeo", ["ngRoute", "nvd3", "vr.directives.slider", "angular-capitalize-filter"]).config([
         "$routeProvider",
         function ($routeProvider) {
-            $routeProvider.when("/welcome", {
-                controller: "WelcomeController",
-                controllerAs: "welcome",
-                templateUrl: "welcome/page.html",
-                reloadOnSearch: false
-            }).when("/dashboard", {
+            $routeProvider.when("/dashboard", {
                 controller: "DashboardController",
                 controllerAs: "dashboard",
                 templateUrl: "dashboard/page.html",
                 reloadOnSearch: false
             }).otherwise({
-                redirectTo: "/welcome",
+                redirectTo: "/dashboard",
                 reloadOnSearch: false
             });
         }
