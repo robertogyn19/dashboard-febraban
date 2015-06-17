@@ -66,18 +66,18 @@ module gogeo {
     }
 
     getDataChart() {
-      this.service.getDateHistogramAggregation().success((result: Array<IDateHistogram>) => {
-        var values = [];
-        this.buckets["values"] = [];
-        result.forEach((item) => {
-          values.push({
-            x: item['timestamp'] + (3 * 3600 * 1000), // Add time offset +3 hours
-            y: item['count']
-          });
-        });
+      // this.service.getDateHistogramAggregation().success((result: Array<IDateHistogram>) => {
+      //   var values = [];
+      //   this.buckets["values"] = [];
+      //   result.forEach((item) => {
+      //     values.push({
+      //       x: item['timestamp'] + (3 * 3600 * 1000), // Add time offset +3 hours
+      //       y: item['count']
+      //     });
+      //   });
 
-        this.buckets[0]["values"] = values;
-      });
+      //   this.buckets[0]["values"] = values;
+      // });
     }
   }
 

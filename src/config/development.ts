@@ -12,7 +12,7 @@ module gogeo {
         "api.url": "cluster.local.io:9090/",
         "tile.url": "cluster.local.io:9090/",
         "subdomains": [],
-        "collection": "crimes_1"
+        "collection": "census_sf"
     };
 
 }

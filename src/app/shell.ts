@@ -7,14 +7,17 @@ module gogeo {
 
   export class Configuration {
     static get apiUrl() {
+      // return "maps.demos.gogeo.io/1.0/";
       return <string> settings["api.url"];
     }
 
     static get tileUrl() {
+      // return "{s}.demos.gogeo.io/1.0/";
       return <string> settings["tile.url"];
     }
 
     static get subdomains() {
+      // return [ "m01", "m02", "m03", "m04" ];
       return <string[]> settings["subdomains"];
     }
 
@@ -51,17 +54,21 @@ module gogeo {
       return "http://maps.demos.gogeo.io/1.0/tools/where/" + place;
     }
 
+    static getStyleName(): string {
+      return "";
+    }
+
     static getCollectionName(): string {
-      return "business_1";
-      // return <string> settings["collection"];
+      // return "census_sf";
+      return <string> settings["collection"];
     }
 
     static getBusinessCollection(): string {
-      return "business_1";
+      return "business";
     }
 
     static getCrimesCollection(): string {
-      return "crimes_1";
+      return "crimes";
     }
 
     static getCensusCollection(): string {
@@ -108,7 +115,7 @@ module gogeo {
 
     static getDatabaseName(): string {
       // TODO: Export this to development/deployment config file
-      return "db1";
+      return "demos";
     }
 
     static tweetFields(): Array<string> {

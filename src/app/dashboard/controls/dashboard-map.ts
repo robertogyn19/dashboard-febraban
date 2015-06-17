@@ -60,6 +60,11 @@ module gogeo {
     initializeLayer() {
       this.map.addLayer(this.layerGroup);
 
+      layers = this.createLayers([ Configuration.getCensusCollection() ], "gogeo_default");
+      for (var i in layers) {
+        this.map.addLayer(layers[i]);
+      }
+
       var layers = this.createLayers();
       for (var i in layers) {
         this.layerGroup.addLayer(layers[i]);
@@ -125,25 +130,39 @@ module gogeo {
       }
     }
 
-    private createLayers(): Array<L.ILayer> {
-      var url = this.configureUrl();
-      var options = {
-        subdomains: Configuration.subdomains,
-        maptiks_id: this.mapSelected
-      };
-
-      if (["point", "intensity"].indexOf(this.mapSelected) != (-1)) {
-        return [L.tileLayer(url, options)];
-      } else if (this.mapSelected === 'cluster') {
-        return [this.createClusterLayer(url)];
+    private createLayers(layers?: Array<string>, stylename?: string): Array<L.ILayer> {
+      if (!layers) {
+        layers = [
+          Configuration.getBusinessCollection()
+        ];
       }
+
+      if (!stylename) {
+        stylename = "gogeo_many_points";
+      }
+
+      var array = [];
+
+      layers.forEach((layerName) => {
+        var url = this.configureUrl(layerName, stylename);
+        var options = {
+          subdomains: Configuration.subdomains,
+          maptiks_id: this.mapSelected
+        };
+
+        if (["point", "intensity"].indexOf(this.mapSelected) != (-1)) {
+          array.push(L.tileLayer(url, options));
+        } else if (this.mapSelected === 'cluster') {
+          array.push(this.createClusterLayer(url));
+        }
+      });
+
+      return array;
     }
 
-    private configureUrl(): string {
+    private configureUrl(collection: string, stylename?: string): string {
       var database = Configuration.getDatabaseName();
-      var collection = Configuration.getCollectionName();
       var buffer = 8;
-      var stylename = "gogeo_many_points";
       var serviceName = "tile.png";
 
       if (this.mapSelected === "cluster") {
@@ -157,8 +176,11 @@ module gogeo {
       var url = "/map/"
         + database + "/" +
         collection + "/{z}/{x}/{y}/"
-        + serviceName + "?buffer=" + buffer +
-        "&stylename=" + stylename + "&mapkey=123";
+        + serviceName + "?buffer=" + buffer + "&mapkey=123";
+
+      if (stylename) {
+        url = url + "&stylename=" + stylename;
+      }
 
       if (this.query) {
         url = `${url}&q=${encodeURIComponent(angular.toJson(this.query))}`;

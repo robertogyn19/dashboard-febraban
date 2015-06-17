@@ -184,20 +184,20 @@ module gogeo {
     }
 
     getDateHistogramAggregation() {
-      var url = Configuration.makeUrl("aggregations", Configuration.getCollectionName(), "date_histogram");
-      var q = this.composeQuery().requestData.q;
+      // var url = Configuration.makeUrl("aggregations", Configuration.getCollectionName(), "date_histogram");
+      // var q = this.composeQuery().requestData.q;
 
-      var options = {
-        params: {
-          mapkey: Configuration.getMapKey(),
-          field: Configuration.getDateField(),
-          interval: Configuration.getInterval(),
-          date_format: "YYYY-MM-DD",
-          q: JSON.stringify(q)
-        }
-      };
+      // var options = {
+      //   params: {
+      //     mapkey: Configuration.getMapKey(),
+      //     field: Configuration.getDateField(),
+      //     interval: Configuration.getInterval(),
+      //     date_format: "YYYY-MM-DD",
+      //     q: JSON.stringify(q)
+      //   }
+      // };
 
-      return this.$http.get<Array<IDateHistogram>>(url, options);
+      // return this.$http.get<Array<IDateHistogram>>(url, options);
     }
 
     private getTweetData(latlng: L.LatLng, zoom: number, thematicQuery?: ThematicQuery) {
@@ -215,14 +215,14 @@ module gogeo {
 
       this._loading = true;
 
-      var query = this.composeQuery();
-      this._lastQueryObservable.onNext(query.requestData.q);
+      // var query = this.composeQuery();
+      // this._lastQueryObservable.onNext(query.requestData.q);
     }
 
-    composeQuery(): DashboardQuery {
-      var query = new DashboardQuery(this.$http, this._lastGeomSpace);
-      return query;
-    }
+    // composeQuery(): DashboardQuery {
+    //   var query = new DashboardQuery(this.$http, this._lastGeomSpace);
+    //   return query;
+    // }
   }
 
   registerService(DashboardService);
