@@ -10,7 +10,8 @@ body, h1, h2, h3, h4, h5, h6 {
 
 @division: 27%;
 @bgColor: #1cb4db;
-@borderColor: #1cb4db;
+@borderColor: @bgColor;
+@gogeoBlueColor: @borderColor;
 
 a {
   color: darken(@bgColor, 10%);
@@ -144,7 +145,7 @@ hr.delimiter {
   .nav-tabs li.active a {
     font-weight: 600;
     font-size: 14px;
-    color: #1CB4DB;
+    color: @gogeoBlueColor;
     line-height: 20px;
     border-top: none;
     margin-top: 0px;
@@ -161,7 +162,7 @@ hr.delimiter {
   .nav-tabs li a {
     font-weight: 400;
     font-size: 14px;
-    color: #D7D7D7;
+    color: @gogeoBlueColor;
     line-height: 20px;
     border-radius: 0px;
   }
@@ -174,7 +175,7 @@ hr.delimiter {
   }
 
   .nav-tabs.search-filter {
-    background-color: #1cb4db;
+    background-color: @gogeoBlueColor;
   }
   .nav-tabs.search-filter .filter {
     float: left;
@@ -239,7 +240,7 @@ hr.delimiter {
     span {
       font-weight: 600;
       font-size: 24px;
-      color: #1CB4DB;
+      color: @gogeoBlueColor;
       line-height: 1.0em;
       margin: 0;
       padding: 0;
