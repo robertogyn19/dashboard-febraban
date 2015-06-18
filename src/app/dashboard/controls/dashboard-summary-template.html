@@ -4,21 +4,21 @@
       <label>
         Companies
       </label>
-      <span>{{ dashclick.companies | number:0 }}</span>
+      <span>{{ dashsummary.companies | number:0 }}</span>
     </div>
 
     <div class="col-sm-4 tweets-amounts-plus">
       <label>
         Crimes
       </label>
-      <span>{{ dashclick.crimesCount | number:0 }}</span>
+      <span>{{ dashsummary.crimesCount | number:0 }}</span>
     </div>
 
     <div class="col-sm-4 tweets-amounts-plus">
       <label>
         Households
       </label>
-      <span>{{ dashclick.households | number:0 }}</span>
+      <span>{{ dashsummary.households | number:0 }}</span>
     </div>
   </div>
 
@@ -27,21 +27,21 @@
       <label>
         Families
       </label>
-      <span>{{ dashclick.families | number:0 }}</span>
+      <span>{{ dashsummary.families | number:0 }}</span>
     </div>
 
     <div class="col-sm-4 tweets-amounts-plus">
       <label>
         Nonfamily
       </label>
-      <span>{{ dashclick.nonfamily | number:0 }}</span>
+      <span>{{ dashsummary.nonfamily | number:0 }}</span>
     </div>
 
      <div class="col-sm-4 tweets-amounts-plus">
       <label>
         Income / household
       </label>
-      <span>{{ dashclick.householdsIncome | currency }}</span>
+      <span>{{ dashsummary.householdsIncome | currency }}</span>
     </div>
   </div>
 
@@ -58,7 +58,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="crime in dashclick.crimes">
+          <tr ng-repeat="crime in dashsummary.crimes">
             <td>{{crime.key | capitalize:all}}</td>
             <td>{{crime.doc_count | number}}</td>
           </tr>

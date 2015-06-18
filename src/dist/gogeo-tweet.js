@@ -60,6 +60,35 @@ var gogeo;
         Configuration.getStyleName = function () {
             return "";
         };
+        Configuration.getCensusFields = function () {
+            return [
+                "geo_id",
+                "geo_id2",
+                "families",
+                "nonfamily",
+                "households",
+                "household_median_income",
+                "white",
+                "black",
+                "indian",
+                "asian",
+                "hawaiian",
+                "others",
+                "two_races",
+                "age_under_5",
+                "age_5_19",
+                "age_20_29",
+                "age_30_44",
+                "age_45_64",
+                "age_85_over",
+                "household_income_less_15k",
+                "household_income_15k_35k",
+                "household_income_35k_75k",
+                "household_income_75k_150k",
+                "household_income_150k_200k",
+                "household_income_200k_more"
+            ];
+        };
         Configuration.getCollectionName = function () {
             // return "census_sf";
             return gogeo.settings["collection"];
@@ -275,59 +304,6 @@ var gogeo;
     gogeo.WelcomeController = WelcomeController;
     gogeo.registerController(WelcomeController);
 })(gogeo || (gogeo = {}));
-var gogeo;
-(function (gogeo) {
-    var DashboardQuery = (function () {
-        function DashboardQuery($http, geomSpace) {
-            this.$http = $http;
-            this.requestData = {};
-            this.requestData = {
-                agg_size: gogeo.Configuration.getAggSize(),
-                field: gogeo.Configuration.getAggField(),
-                geom: geomSpace,
-                q: {
-                    query: {
-                        bool: {
-                            must: []
-                        }
-                    }
-                }
-            };
-        }
-        DashboardQuery.prototype.getOrCreateAndRestriction = function (filter) {
-        };
-        DashboardQuery.prototype.filterBySearchTerms = function (terms) {
-        };
-        DashboardQuery.prototype.filterBySearchTerm = function (term) {
-        };
-        DashboardQuery.prototype.filterByHashtag = function (hashtag) {
-        };
-        DashboardQuery.prototype.filterByUsername = function (username) {
-        };
-        DashboardQuery.prototype.filterByText = function (text) {
-        };
-        DashboardQuery.prototype.filterByPlace = function (text) {
-            var must = this.getMust();
-            var placeQueryString = new gogeo.TextQueryBuilder(gogeo.TextQueryBuilder.Place, text);
-        };
-        DashboardQuery.prototype.filterByDateRange = function (range) {
-            var must = this.getMust();
-            var dateRangeQuery = new gogeo.DateRangeQueryBuilder(gogeo.DateRangeQueryBuilder.DateRange, range);
-            must.push(dateRangeQuery.build());
-        };
-        DashboardQuery.prototype.getMust = function () {
-            return this.requestData.q.query.bool.must;
-        };
-        DashboardQuery.prototype.execute = function (resultHandler) {
-            var url = gogeo.Configuration.makeUrl("geoagg");
-            this.requestData["mapkey"] = gogeo.Configuration.getMapKey();
-            // console.log("this.requestData", JSON.stringify(this.requestData, null, 2));
-            return this.$http.post(url, this.requestData).success(resultHandler);
-        };
-        return DashboardQuery;
-    })();
-    gogeo.DashboardQuery = DashboardQuery;
-})(gogeo || (gogeo = {}));
 ///<reference path="./interfaces.ts" />
 var gogeo;
 (function (gogeo) {
@@ -462,6 +438,59 @@ var gogeo;
 })(gogeo || (gogeo = {}));
 var gogeo;
 (function (gogeo) {
+    var DashboardQuery = (function () {
+        function DashboardQuery($http, geomSpace) {
+            this.$http = $http;
+            this.requestData = {};
+            this.requestData = {
+                agg_size: gogeo.Configuration.getAggSize(),
+                field: gogeo.Configuration.getAggField(),
+                geom: geomSpace,
+                q: {
+                    query: {
+                        bool: {
+                            must: []
+                        }
+                    }
+                }
+            };
+        }
+        DashboardQuery.prototype.getOrCreateAndRestriction = function (filter) {
+        };
+        DashboardQuery.prototype.filterBySearchTerms = function (terms) {
+        };
+        DashboardQuery.prototype.filterBySearchTerm = function (term) {
+        };
+        DashboardQuery.prototype.filterByHashtag = function (hashtag) {
+        };
+        DashboardQuery.prototype.filterByUsername = function (username) {
+        };
+        DashboardQuery.prototype.filterByText = function (text) {
+        };
+        DashboardQuery.prototype.filterByPlace = function (text) {
+            var must = this.getMust();
+            var placeQueryString = new gogeo.TextQueryBuilder(gogeo.TextQueryBuilder.Place, text);
+        };
+        DashboardQuery.prototype.filterByDateRange = function (range) {
+            var must = this.getMust();
+            var dateRangeQuery = new gogeo.DateRangeQueryBuilder(gogeo.DateRangeQueryBuilder.DateRange, range);
+            must.push(dateRangeQuery.build());
+        };
+        DashboardQuery.prototype.getMust = function () {
+            return this.requestData.q.query.bool.must;
+        };
+        DashboardQuery.prototype.execute = function (resultHandler) {
+            var url = gogeo.Configuration.makeUrl("geoagg");
+            this.requestData["mapkey"] = gogeo.Configuration.getMapKey();
+            // console.log("this.requestData", JSON.stringify(this.requestData, null, 2));
+            return this.$http.post(url, this.requestData).success(resultHandler);
+        };
+        return DashboardQuery;
+    })();
+    gogeo.DashboardQuery = DashboardQuery;
+})(gogeo || (gogeo = {}));
+var gogeo;
+(function (gogeo) {
     var GogeoGeosearch = (function () {
         function GogeoGeosearch($http, geom, collection, buffer, buffer_measure, fields, limit, query) {
             this.$http = $http;
@@ -582,14 +611,6 @@ var gogeo;
             this.$timeout = $timeout;
             this.$routeParams = $routeParams;
             this._lastGeomSpace = null;
-            this._lastHashtagFilter = null;
-            this._lastSomethingTerms = [];
-            this._lastPlaceString = null;
-            this._lastDateRange = null;
-            this._lastMapCenter = null;
-            this._lastMapZoom = 0;
-            this._lastMapType = null;
-            this._lastMapBase = null;
             this._loading = true;
             this._lastRadius = 0;
             this.worldBound = {
@@ -620,10 +641,9 @@ var gogeo;
                 ]
             };
             this._geomSpaceObservable = new Rx.BehaviorSubject(null);
-            this._dateRangeObservable = new Rx.BehaviorSubject(null);
             this._lastQueryObservable = new Rx.BehaviorSubject(null);
-            // _tweetObservable = new Rx.BehaviorSubject<Array<ITweet>>(null);
             this._lastCircleObservable = new Rx.BehaviorSubject(null);
+            this._lastCensusObservable = new Rx.BehaviorSubject(null);
         }
         Object.defineProperty(DashboardService.prototype, "loading", {
             get: function () {
@@ -652,6 +672,13 @@ var gogeo;
         Object.defineProperty(DashboardService.prototype, "circleObservable", {
             get: function () {
                 return this._lastCircleObservable;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(DashboardService.prototype, "censusObservable", {
+            get: function () {
+                return this._lastCensusObservable;
             },
             enumerable: true,
             configurable: true
@@ -703,15 +730,15 @@ var gogeo;
             return new gogeo.GogeoGeoagg(this.$http, geom, collectionName, field, this._lastRadius);
         };
         DashboardService.prototype.censusGeoSearch = function (geom) {
-            var fields = [
-                "geo_id",
-                "geo_id2",
-                "families",
-                "nonfamily",
-                "households",
-                "household_median_income"
-            ];
+            var fields = gogeo.Configuration.getCensusFields();
             return new gogeo.GogeoGeosearch(this.$http, geom, gogeo.Configuration.getCensusCollection(), this._lastRadius, "kilometer", fields, 10);
+        };
+        DashboardService.prototype.updateCensus = function (geom) {
+            var _this = this;
+            var ggsc = this.censusGeoSearch(geom);
+            ggsc.execute(function (result) {
+                _this._lastCensusObservable.onNext(result);
+            });
         };
         DashboardService.prototype.updateGeomSpace = function (geom) {
             this._loading = true;
@@ -729,18 +756,6 @@ var gogeo;
             return this.getTweetData(latlng, zoom, thematicQuery);
         };
         DashboardService.prototype.getDateHistogramAggregation = function () {
-            // var url = Configuration.makeUrl("aggregations", Configuration.getCollectionName(), "date_histogram");
-            // var q = this.composeQuery().requestData.q;
-            // var options = {
-            //   params: {
-            //     mapkey: Configuration.getMapKey(),
-            //     field: Configuration.getDateField(),
-            //     interval: Configuration.getInterval(),
-            //     date_format: "YYYY-MM-DD",
-            //     q: JSON.stringify(q)
-            //   }
-            // };
-            // return this.$http.get<Array<IDateHistogram>>(url, options);
         };
         DashboardService.prototype.getTweetData = function (latlng, zoom, thematicQuery) {
         };
@@ -771,86 +786,227 @@ var gogeo;
 })(gogeo || (gogeo = {}));
 /// <reference path="../../shell.ts" />
 /// <reference path="../../dashboard/services/dashboard-service.ts" />
-/**
- * Created by danfma on 06/03/15.
- */
 var gogeo;
 (function (gogeo) {
-    var DataRangeController = (function () {
-        function DataRangeController($scope, service) {
-            this.$scope = $scope;
-            this.service = service;
-            this.min = null;
-            this.max = null;
-        }
-        DataRangeController.prototype.initialize = function () {
-        };
-        DataRangeController.$inject = [
-            "$scope",
-            gogeo.DashboardService.$named
-        ];
-        return DataRangeController;
-    })();
-    gogeo.registerDirective("daterange", function () {
-        return {
-            restrict: "E",
-            template: "\n                <div class=\"input-group daterange\">\n                    <input \n                        id=\"startRange\"\n                        class=\"form-control\"\n                        type=\"text\"\n                        data-provide=\"datepicker\"\n                        data-date-clear-btn=\"true\"\n                        data-date-start-date=\"{{range.min}}\"\n                        data-date-end-date=\"{{range.max}}\"\n                        data-date-autoclose=\"true\"\n                        ng-model=\"startDate\"/>\n                    <span class=\"input-group-addon\">\n                        <i class=\"glyphicon glyphicon-calendar\"></i>\n                    </span>\n                    <input\n                        id=\"endRange\"\n                        class=\"form-control\"\n                        type=\"text\"\n                        data-provide=\"datepicker\"\n                        data-date-clear-btn=\"true\"\n                        data-date-start-date=\"{{range.min}}\"\n                        data-date-end-date=\"{{range.max}}\"\n                        data-date-autoclose=\"true\"\n                        ng-model=\"endDate\"/>\n                </div>",
-            scope: {
-                startDate: "=",
-                endDate: "="
-            },
-            controller: DataRangeController,
-            controllerAs: "range",
-            link: function (scope, element, attrs, controller) {
-                controller.initialize();
-            }
-        };
-    });
-})(gogeo || (gogeo = {}));
-/// <reference path="../../shell.ts" />
-/**
- * Created by danfma on 05/03/15.
- */
-var gogeo;
-(function (gogeo) {
-    angular.module("gogeo").directive("welcomeMap", [
-        function () {
-            return {
-                restrict: "C",
-                // template: "<div></div>",
-                link: function (scope, element, attrs) {
-                    var rawElement = element[0];
-                    var url = "http://api.gogeo.io/1.0/map/" + gogeo.Configuration.getDatabaseName() + "/" + gogeo.Configuration.getCollectionName() + "/{z}/{x}/{y}/tile.png?mapkey=" + gogeo.Configuration.getMapKey() + "&stylename=gogeo_many_points";
-                    var initialPos = L.latLng(43.717232, -92.353034);
-                    var map = L.map("welcome-map").setView(initialPos, 5);
-                    map.addLayer(L.tileLayer('https://dnv9my2eseobd.cloudfront.net/v3/cartodb.map-4xtxp73f/{z}/{x}/{y}.png', {
-                        attribution: 'Mapbox <a href="http://mapbox.com/about/maps" target="_blank">Terms &amp; Feedback</a>'
-                    }));
-                    L.tileLayer(url).addTo(map);
-                    scope.$on("destroy", function () { return map.remove(); });
-                }
-            };
-        }
-    ]);
-})(gogeo || (gogeo = {}));
-/// <reference path="../../shell.ts" />
-/// <reference path="../../dashboard/services/dashboard-service.ts" />
-var gogeo;
-(function (gogeo) {
-    var DashboardClickController = (function () {
-        function DashboardClickController($scope, $timeout, service) {
+    var DashboardCensusController = (function () {
+        function DashboardCensusController($scope, service) {
             var _this = this;
             this.$scope = $scope;
-            this.$timeout = $timeout;
             this.service = service;
-            this.crimes = [
+            this.barChartOptions = {
+                chart: {
+                    type: "discreteBarChart",
+                    height: 300,
+                    width: 450,
+                    margin: {
+                        top: 20,
+                        right: 20,
+                        bottom: 40,
+                        left: 55
+                    },
+                    x: function (d) {
+                        return d.label;
+                    },
+                    y: function (d) {
+                        return d.value;
+                    },
+                    useInteractiveGuideline: true,
+                    dispatch: {},
+                    showXAxis: false,
+                    tooltipContent: function (key, x, y, obj) {
+                        y = numeral(y).format("0");
+                        var content = '<h3>' + obj.point.label + '</h3>' + '<p>' + y + '</p>';
+                        return content;
+                    },
+                    transitionDuration: 250
+                }
+            };
+            this.incomeChartOptions = {};
+            this.ageChartOptions = {};
+            this.pieChartOptions = {
+                chart: {
+                    type: "pieChart",
+                    height: 400,
+                    width: 400,
+                    x: function (d) {
+                        return d.label;
+                    },
+                    y: function (d) {
+                        return d.value;
+                    },
+                    showLabels: false,
+                    transitionDuration: 500,
+                    showLegend: true,
+                    donut: true,
+                    margin: {
+                        top: -50,
+                        left: 10,
+                    },
+                    tooltipContent: function (key, y, e) {
+                        var tooltip = e.point.tooltip || key;
+                        y = numeral(y).format("0");
+                        var content = '<h3 style="background-color: ' + e.color + '">' + tooltip + '</h3>' + '<p>' + y + '</p>';
+                        return content;
+                    },
+                    legend: {
+                        width: 400,
+                        height: 300,
+                        key: function (d) {
+                            return d.key;
+                        },
+                        margin: {
+                            top: 5,
+                            right: 5,
+                            bottom: 5,
+                            left: 5
+                        }
+                    }
+                },
+                title: {
+                    enable: true,
+                    text: "Races chart"
+                }
+            };
+            this.racesData = [
+                {
+                    key: "white",
+                    label: "White",
+                    tooltip: "White",
+                    value: 0
+                },
+                {
+                    key: "black",
+                    label: "Black",
+                    tooltip: "Black or African American",
+                    value: 0
+                },
+                {
+                    key: "indian",
+                    label: "Indian",
+                    tooltip: "American Indian and Alaska Native",
+                    value: 0
+                },
+                {
+                    key: "asian",
+                    label: "Asian",
+                    tooltip: "Asian",
+                    value: 0
+                },
+                {
+                    key: "hawaiian",
+                    label: "Hawaiian",
+                    tooltip: "Native Hawaiian and Other Pacific Islander",
+                    value: 0
+                },
+                {
+                    key: "others",
+                    label: "Others",
+                    tooltip: "Some Other Race",
+                    value: 0
+                },
+                {
+                    key: "two_races",
+                    label: "Two or More Races",
+                    tooltip: "Two or More Races",
+                    value: 0
+                }
             ];
-            this.companies = 0;
-            this.crimesCount = 0;
-            this.households = 0;
-            this.families = 0;
-            this.nonfamily = 0;
-            this.householdsIncome = 0;
+            this.ageData = [
+                {
+                    key: "Age",
+                    values: [
+                        {
+                            label: "Under 5 years",
+                            key: "age_under_5",
+                            value: 0,
+                            color: "#D53E4F"
+                        },
+                        {
+                            label: "5 to 19 years",
+                            key: "age_5_19",
+                            value: 0,
+                            color: "#FC8D59"
+                        },
+                        {
+                            label: "20 to 29 years",
+                            key: "age_20_29",
+                            value: 0,
+                            color: "#8C510A"
+                        },
+                        {
+                            label: "30 to 44 years",
+                            key: "age_30_44",
+                            value: 0,
+                            color: "#01665E"
+                        },
+                        {
+                            label: "45 to 64 years",
+                            key: "age_45_64",
+                            value: 0,
+                            color: "#5AB4AC"
+                        },
+                        {
+                            label: "65 years and over",
+                            key: "age_85_over",
+                            value: 0,
+                            color: "#3288BD"
+                        }
+                    ]
+                }
+            ];
+            this.incomeData = [
+                {
+                    key: "Income per Household",
+                    values: [
+                        {
+                            label: "Less than $15,000",
+                            key: "household_income_less_15k",
+                            value: 0,
+                            color: "#053061"
+                        },
+                        {
+                            label: "$15,000 to $34,999",
+                            key: "household_income_15k_35k",
+                            value: 0,
+                            color: "#2166AC"
+                        },
+                        {
+                            label: "$35,000 to $74,999",
+                            key: "household_income_35k_75k",
+                            value: 0,
+                            color: "#4393C3"
+                        },
+                        {
+                            label: "$75,000 to $149,999",
+                            key: "household_income_75k_150k",
+                            value: 0,
+                            color: "#D6604D"
+                        },
+                        {
+                            label: "$150,000 to $199,999",
+                            key: "household_income_150k_200k",
+                            value: 0,
+                            color: "#B2182B"
+                        },
+                        {
+                            label: "$200,000 and over",
+                            key: "household_income_200k_more",
+                            value: 0,
+                            color: "#67001F"
+                        }
+                    ]
+                }
+            ];
+            this.incomeChartOptions = _.clone(this.barChartOptions);
+            this.incomeChartOptions["title"] = {
+                enable: true,
+                text: "Household Income Chart"
+            };
+            this.ageChartOptions = _.clone(this.barChartOptions);
+            this.ageChartOptions["title"] = {
+                enable: true,
+                text: "Age Chart"
+            };
             this.service.circleObservable.where(function (point) { return point != null; }).throttle(400).subscribe(function (point) {
                 var geom = {
                     type: "Point",
@@ -859,62 +1015,49 @@ var gogeo;
                         point.lat
                     ]
                 };
-                _this.handleCrimesResult(_this.service.crimesGeoAgg(geom));
-                _this.handleCompaniesResult(_this.service.businessGeoAgg(geom));
-                _this.handleCensusResult(_this.service.censusGeoSearch(geom));
+                _this.service.updateCensus(geom);
+            });
+            this.service.censusObservable.where(function (result) { return result != null; }).subscribe(function (result) {
+                _this.handleCensusResult(result);
             });
         }
-        DashboardClickController.prototype.handleCrimesResult = function (geoagg) {
-            var _this = this;
-            geoagg.execute(function (result) {
-                _this.crimesCount = result.doc_total;
-                _this.crimes = result.buckets.slice(0, 5);
-            });
-        };
-        DashboardClickController.prototype.handleCompaniesResult = function (geoagg) {
-            var _this = this;
-            geoagg.execute(function (result) {
-                _this.companies = result.doc_total;
-            });
-        };
-        DashboardClickController.prototype.handleCensusResult = function (geosearch) {
-            var _this = this;
-            geosearch.execute(function (result) {
-                var avg = 0;
-                _this.households = _this.families = _this.nonfamily = _this.householdsIncome = 0;
+        DashboardCensusController.prototype.handleCensusResult = function (result) {
+            this.racesData.forEach(function (race) {
+                var key = race["key"];
+                race["value"] = 0;
                 result.forEach(function (item) {
-                    _this.households += item.households;
-                    _this.families += item.families;
-                    _this.nonfamily += item.nonfamily;
-                    avg += item.household_median_income;
+                    race["value"] += item[key];
                 });
-                _this.householdsIncome = _this.calculateWeightedAverage(result);
+            });
+            this.ageData[0]["values"].forEach(function (age) {
+                var key = age["key"];
+                age["value"] = 0;
+                result.forEach(function (item) {
+                    age["value"] += item[key];
+                });
+            });
+            this.incomeData[0]["values"].forEach(function (income) {
+                var key = income["key"];
+                income["value"] = 0;
+                result.forEach(function (item) {
+                    income["value"] += item[key];
+                });
             });
         };
-        DashboardClickController.prototype.calculateWeightedAverage = function (result) {
-            var pi = 0;
-            var sh = 0;
-            result.forEach(function (item) {
-                sh += item.households;
-                pi += (item.household_median_income * item.households);
-            });
-            return pi / sh;
-        };
-        DashboardClickController.$inject = [
+        DashboardCensusController.$inject = [
             "$scope",
-            "$timeout",
             gogeo.DashboardService.$named
         ];
-        return DashboardClickController;
+        return DashboardCensusController;
     })();
-    gogeo.DashboardClickController = DashboardClickController;
+    gogeo.DashboardCensusController = DashboardCensusController;
     ;
-    gogeo.registerDirective("dashboardClick", function () {
+    gogeo.registerDirective("dashboardCensus", function () {
         return {
             restrict: "E",
-            templateUrl: "dashboard/controls/dashboard-click-template.html",
-            controller: DashboardClickController,
-            controllerAs: "dashclick",
+            templateUrl: "dashboard/controls/dashboard-census-template.html",
+            controller: DashboardCensusController,
+            controllerAs: "dashcensus",
             bindToController: true,
             scope: {},
             link: function (scope, element, attrs, controller) {
@@ -1074,7 +1217,8 @@ var gogeo;
             this.service = service;
             this.metrics = metrics;
             this.query = { query: { filtered: { filter: {} } } };
-            this.selected = "inactive";
+            this.businessSelected = true;
+            this.crimesSelected = false;
             this.mapTypes = ["point", "cluster", "intensity"];
             this.mapSelected = "point";
             this.baseLayers = null;
@@ -1085,6 +1229,9 @@ var gogeo;
             this.baseLayerSelected = "day";
             this.levent = null;
             this._selectedMap = new Rx.BehaviorSubject(null);
+            this.layerNames = [
+                gogeo.Configuration.getBusinessCollection()
+            ];
             this.layerGroup = L.layerGroup([]);
             this.baseLayers = L.featureGroup([]);
         }
@@ -1103,11 +1250,12 @@ var gogeo;
         DashboardMapController.prototype.initializeLayer = function () {
             var _this = this;
             this.map.addLayer(this.layerGroup);
+            var layers = null;
             layers = this.createLayers([gogeo.Configuration.getCensusCollection()], "gogeo_default");
             for (var i in layers) {
                 this.map.addLayer(layers[i]);
             }
-            var layers = this.createLayers();
+            layers = this.createLayers(this.layerNames);
             for (var i in layers) {
                 this.layerGroup.addLayer(layers[i]);
             }
@@ -1161,14 +1309,6 @@ var gogeo;
         };
         DashboardMapController.prototype.createLayers = function (layers, stylename) {
             var _this = this;
-            if (!layers) {
-                layers = [
-                    gogeo.Configuration.getBusinessCollection()
-                ];
-            }
-            if (!stylename) {
-                stylename = "gogeo_many_points";
-            }
             var array = [];
             layers.forEach(function (layerName) {
                 var url = _this.configureUrl(layerName, stylename);
@@ -1195,6 +1335,12 @@ var gogeo;
             if (this.mapSelected === "intensity") {
                 stylename = "gogeo_intensity";
             }
+            if (collection === gogeo.Configuration.getBusinessCollection()) {
+                stylename = "gogeo_many_points";
+            }
+            else if (collection === gogeo.Configuration.getCrimesCollection()) {
+                stylename = "crimes_style";
+            }
             var url = "/map/" + database + "/" + collection + "/{z}/{x}/{y}/" + serviceName + "?buffer=" + buffer + "&mapkey=123";
             if (stylename) {
                 url = url + "&stylename=" + stylename;
@@ -1203,6 +1349,24 @@ var gogeo;
                 url = "" + url + "&q=" + encodeURIComponent(angular.toJson(this.query));
             }
             return gogeo.Configuration.prefixUrl(url);
+        };
+        DashboardMapController.prototype.toggleLayer = function (type) {
+            if (type === "business") {
+                this.addOrRemoveFromLayers(gogeo.Configuration.getBusinessCollection());
+            }
+            else {
+                this.addOrRemoveFromLayers(gogeo.Configuration.getCrimesCollection());
+            }
+            this.updateLayer();
+        };
+        DashboardMapController.prototype.addOrRemoveFromLayers = function (layerName) {
+            var index = this.layerNames.indexOf(layerName);
+            if (index >= 0) {
+                this.layerNames.splice(index, 1);
+            }
+            else {
+                this.layerNames.push(layerName);
+            }
         };
         DashboardMapController.prototype.switchBaseLayer = function () {
             this.baseLayers.clearLayers();
@@ -1231,7 +1395,7 @@ var gogeo;
             var point = levent.latlng;
             var radius = this.service.getRadius();
             var circleOptions = {
-                color: "red"
+                color: "yellow"
             };
             var circle = L.circle(point, radius * 1000, circleOptions);
             circle.on("click", function (e) { return _this.addCircle(e); });
@@ -1251,7 +1415,7 @@ var gogeo;
         };
         DashboardMapController.prototype.updateLayer = function () {
             this.layerGroup.clearLayers();
-            var layers = this.createLayers();
+            var layers = this.createLayers(this.layerNames);
             for (var i in layers) {
                 this.layerGroup.addLayer(layers[i]);
             }
@@ -1341,6 +1505,96 @@ var gogeo;
     });
 })(gogeo || (gogeo = {}));
 /// <reference path="../../shell.ts" />
+/// <reference path="../../dashboard/services/dashboard-service.ts" />
+var gogeo;
+(function (gogeo) {
+    var DashboardSummaryController = (function () {
+        function DashboardSummaryController($scope, $timeout, service) {
+            var _this = this;
+            this.$scope = $scope;
+            this.$timeout = $timeout;
+            this.service = service;
+            this.crimes = [
+            ];
+            this.companies = 0;
+            this.crimesCount = 0;
+            this.households = 0;
+            this.families = 0;
+            this.nonfamily = 0;
+            this.householdsIncome = 0;
+            this.service.circleObservable.where(function (point) { return point != null; }).throttle(400).subscribe(function (point) {
+                var geom = {
+                    type: "Point",
+                    coordinates: [
+                        point.lng,
+                        point.lat
+                    ]
+                };
+                _this.handleCrimesResult(_this.service.crimesGeoAgg(geom));
+                _this.handleCompaniesResult(_this.service.businessGeoAgg(geom));
+                _this.service.updateCensus(geom);
+            });
+            this.service.censusObservable.where(function (result) { return result != null; }).subscribe(function (result) {
+                _this.handleCensusResult(result);
+            });
+        }
+        DashboardSummaryController.prototype.handleCrimesResult = function (geoagg) {
+            var _this = this;
+            geoagg.execute(function (result) {
+                _this.crimesCount = result.doc_total;
+                _this.crimes = result.buckets.slice(0, 5);
+            });
+        };
+        DashboardSummaryController.prototype.handleCompaniesResult = function (geoagg) {
+            var _this = this;
+            geoagg.execute(function (result) {
+                _this.companies = result.doc_total;
+            });
+        };
+        DashboardSummaryController.prototype.handleCensusResult = function (result) {
+            var _this = this;
+            var avg = 0;
+            this.households = this.families = this.nonfamily = this.householdsIncome = 0;
+            result.forEach(function (item) {
+                _this.households += item.households;
+                _this.families += item.families;
+                _this.nonfamily += item.nonfamily;
+                avg += item.household_median_income;
+            });
+            this.householdsIncome = this.calculateWeightedAverage(result);
+        };
+        DashboardSummaryController.prototype.calculateWeightedAverage = function (result) {
+            var pi = 0;
+            var sh = 0;
+            result.forEach(function (item) {
+                sh += item.households;
+                pi += (item.household_median_income * item.households);
+            });
+            return pi / sh;
+        };
+        DashboardSummaryController.$inject = [
+            "$scope",
+            "$timeout",
+            gogeo.DashboardService.$named
+        ];
+        return DashboardSummaryController;
+    })();
+    gogeo.DashboardSummaryController = DashboardSummaryController;
+    ;
+    gogeo.registerDirective("dashboardSummary", function () {
+        return {
+            restrict: "E",
+            templateUrl: "dashboard/controls/dashboard-summary-template.html",
+            controller: DashboardSummaryController,
+            controllerAs: "dashsummary",
+            bindToController: true,
+            scope: {},
+            link: function (scope, element, attrs, controller) {
+            }
+        };
+    });
+})(gogeo || (gogeo = {}));
+/// <reference path="../../shell.ts" />
 /// <reference path="../../shell.ts" />
 var gogeo;
 (function (gogeo) {
@@ -1397,17 +1651,6 @@ var gogeo;
             ];
         }
         DateHistogramChartController.prototype.getDataChart = function () {
-            // this.service.getDateHistogramAggregation().success((result: Array<IDateHistogram>) => {
-            //   var values = [];
-            //   this.buckets["values"] = [];
-            //   result.forEach((item) => {
-            //     values.push({
-            //       x: item['timestamp'] + (3 * 3600 * 1000), // Add time offset +3 hours
-            //       y: item['count']
-            //     });
-            //   });
-            //   this.buckets[0]["values"] = values;
-            // });
         };
         DateHistogramChartController.$inject = [
             "$scope",
@@ -1472,4 +1715,68 @@ var gogeo;
             }
         };
     });
+})(gogeo || (gogeo = {}));
+/// <reference path="../../shell.ts" />
+/// <reference path="../../dashboard/services/dashboard-service.ts" />
+/**
+ * Created by danfma on 06/03/15.
+ */
+var gogeo;
+(function (gogeo) {
+    var DataRangeController = (function () {
+        function DataRangeController($scope, service) {
+            this.$scope = $scope;
+            this.service = service;
+            this.min = null;
+            this.max = null;
+        }
+        DataRangeController.prototype.initialize = function () {
+        };
+        DataRangeController.$inject = [
+            "$scope",
+            gogeo.DashboardService.$named
+        ];
+        return DataRangeController;
+    })();
+    gogeo.registerDirective("daterange", function () {
+        return {
+            restrict: "E",
+            template: "\n                <div class=\"input-group daterange\">\n                    <input \n                        id=\"startRange\"\n                        class=\"form-control\"\n                        type=\"text\"\n                        data-provide=\"datepicker\"\n                        data-date-clear-btn=\"true\"\n                        data-date-start-date=\"{{range.min}}\"\n                        data-date-end-date=\"{{range.max}}\"\n                        data-date-autoclose=\"true\"\n                        ng-model=\"startDate\"/>\n                    <span class=\"input-group-addon\">\n                        <i class=\"glyphicon glyphicon-calendar\"></i>\n                    </span>\n                    <input\n                        id=\"endRange\"\n                        class=\"form-control\"\n                        type=\"text\"\n                        data-provide=\"datepicker\"\n                        data-date-clear-btn=\"true\"\n                        data-date-start-date=\"{{range.min}}\"\n                        data-date-end-date=\"{{range.max}}\"\n                        data-date-autoclose=\"true\"\n                        ng-model=\"endDate\"/>\n                </div>",
+            scope: {
+                startDate: "=",
+                endDate: "="
+            },
+            controller: DataRangeController,
+            controllerAs: "range",
+            link: function (scope, element, attrs, controller) {
+                controller.initialize();
+            }
+        };
+    });
+})(gogeo || (gogeo = {}));
+/// <reference path="../../shell.ts" />
+/**
+ * Created by danfma on 05/03/15.
+ */
+var gogeo;
+(function (gogeo) {
+    angular.module("gogeo").directive("welcomeMap", [
+        function () {
+            return {
+                restrict: "C",
+                // template: "<div></div>",
+                link: function (scope, element, attrs) {
+                    var rawElement = element[0];
+                    var url = "http://api.gogeo.io/1.0/map/" + gogeo.Configuration.getDatabaseName() + "/" + gogeo.Configuration.getCollectionName() + "/{z}/{x}/{y}/tile.png?mapkey=" + gogeo.Configuration.getMapKey() + "&stylename=gogeo_many_points";
+                    var initialPos = L.latLng(43.717232, -92.353034);
+                    var map = L.map("welcome-map").setView(initialPos, 5);
+                    map.addLayer(L.tileLayer('https://dnv9my2eseobd.cloudfront.net/v3/cartodb.map-4xtxp73f/{z}/{x}/{y}.png', {
+                        attribution: 'Mapbox <a href="http://mapbox.com/about/maps" target="_blank">Terms &amp; Feedback</a>'
+                    }));
+                    L.tileLayer(url).addTo(map);
+                    scope.$on("destroy", function () { return map.remove(); });
+                }
+            };
+        }
+    ]);
 })(gogeo || (gogeo = {}));

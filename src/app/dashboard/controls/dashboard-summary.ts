@@ -2,7 +2,7 @@
 /// <reference path="../../dashboard/services/dashboard-service.ts" />
 
 module gogeo {
-  export class DashboardClickController {
+  export class DashboardSummaryController {
     static $inject = [
       "$scope",
       "$timeout",
@@ -37,7 +37,13 @@ module gogeo {
 
           this.handleCrimesResult(this.service.crimesGeoAgg(geom));
           this.handleCompaniesResult(this.service.businessGeoAgg(geom));
-          this.handleCensusResult(this.service.censusGeoSearch(geom));
+          this.service.updateCensus(geom);
+        });
+
+      this.service.censusObservable
+        .where(result => result != null)
+        .subscribe((result: Array<ICensusDocument>) => {
+          this.handleCensusResult(result);
         });
     }
 
@@ -54,20 +60,18 @@ module gogeo {
       });
     }
 
-    handleCensusResult(geosearch: GogeoGeosearch) {
-      geosearch.execute((result: Array<ICensusDocument>) => {
-        var avg = 0;
-        this.households = this.families = this.nonfamily = this.householdsIncome = 0;
+    handleCensusResult(result: Array<ICensusDocument>) {
+      var avg = 0;
+      this.households = this.families = this.nonfamily = this.householdsIncome = 0;
 
-        result.forEach((item) => {
-          this.households += item.households;
-          this.families += item.families;
-          this.nonfamily += item.nonfamily;
-          avg += item.household_median_income;
-        });
-
-        this.householdsIncome = this.calculateWeightedAverage(result);
+      result.forEach((item) => {
+        this.households += item.households;
+        this.families += item.families;
+        this.nonfamily += item.nonfamily;
+        avg += item.household_median_income;
       });
+
+      this.householdsIncome = this.calculateWeightedAverage(result);
     }
 
     calculateWeightedAverage(result: Array<ICensusDocument>): number {
@@ -82,17 +86,17 @@ module gogeo {
     }
   };
 
-  registerDirective("dashboardClick", () => {
+  registerDirective("dashboardSummary", () => {
     return {
       restrict: "E",
-      templateUrl: "dashboard/controls/dashboard-click-template.html",
-      controller: DashboardClickController,
-      controllerAs: "dashclick",
+      templateUrl: "dashboard/controls/dashboard-summary-template.html",
+      controller: DashboardSummaryController,
+      controllerAs: "dashsummary",
       bindToController: true,
 
       scope: {},
 
-      link(scope, element, attrs, controller: DashboardClickController) {
+      link(scope, element, attrs, controller: DashboardSummaryController) {
       }
     };
   });

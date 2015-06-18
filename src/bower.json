@@ -38,6 +38,7 @@
     "d3": "~3.5.5",
     "nvd3": "~1.7.1",
     "venturocket-angular-slider": "~0.3.2",
-    "angular-capitalize-filter": "~2.1.0"
+    "angular-capitalize-filter": "~2.1.0",
+    "underscore": "~1.8.3"
   }
 }

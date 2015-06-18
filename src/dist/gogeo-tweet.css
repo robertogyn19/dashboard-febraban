@@ -2386,21 +2386,25 @@ svg .title{font:700 14px Arial}
 .navbar.navbar-default{background-color:#1cb4db;border-color:none}
 .navbar .navbar-header .navbar-brand{width:auto;height:auto;margin:0;padding:0}
 .dashboard-right-panel{background-color:#fff}
-.dashboard-panel,.jumbotron{background-color:#1cb4db}
 body,html{height:100%;min-height:100%}
 .welcome-map{position:absolute;top:0;bottom:0;width:100%;z-index:-1}
-.jumbotron{width:100%;z-index:10}
+.jumbotron{width:100%;background-color:#1cb4db;z-index:10}
 .jumbotron a,.jumbotron h1,.jumbotron p{font-family:'Titillium Web',sans-serif;color:#fcfcfc}
 .jumbotron h1{font-size:48px;line-height:73px;font-weight:600}
 .jumbotron p{font-size:36px;line-height:55px}
 .jumbotron .btn-primary{font-size:24px;line-height:36px;font-weight:600;text-transform:uppercase;padding:21px 85px;margin-top:25px;border-radius:4px}
-.daterange input.form-control{width:100px;max-width:100px}
+.chart-legend span.legend-item,.legend{margin-left:5px}
 @font-face{font-family:"Titillium Web",sans-serif}
 body,h1,h2,h3,h4,h5,h6{font-family:"Titillium Web"!important}
 a{color:#168fae}
 hr.delimiter{border-color:#D8D8D8;margin-top:0;margin-bottom:0}
+.legend{display:block;float:right;height:16px;width:16px;margin-top:3px}
+.legend.business{background-color:#00f}
+.legend.crimes{background-color:#E3170A}
+.chart-legend{margin-bottom:20px}
 .numberpad{font-family:"Titillium Web";font-size:18pt;color:#1cb4db}
 .numberpad-big{font-size:28pt}
+.dashboard-panel{background-color:#1cb4db}
 .dashboard-panel .dashboard-top-panel .navbar .navbar-brand{margin-right:16px}
 .dashboard-panel .dashboard-map-panel{width:73%;height:100%;position:relative;float:left}
 .dashboard-panel .dashboard-right-panel{overflow-y:auto;overflow-x:hidden;display:block;position:relative;float:right;background-color:#f0f0f0;margin:0;padding:0;z-index:2;width:27%;height:100%;border-left:solid 2px #1cb4db}
@@ -2409,7 +2413,7 @@ hr.delimiter{border-color:#D8D8D8;margin-top:0;margin-bottom:0}
 .dashboard-header .navbar-header .navbar-brand{width:auto;height:auto;margin:0;padding:0 10px 0 0}
 .dashboard-header .navbar-header .navbar-brand img{margin:0}
 .dashboard-details{position:relative}
-.tab-container{margin-top:20px}
+.tab-container{margin-top:5px}
 .dashboard-right-panel{padding-top:20px}
 .dashboard-right-panel .nav{margin-bottom:8px}
 .dashboard-right-panel .nav-tabs{border-top:1px solid #D8D8D8;border-bottom:1px solid #D8D8D8}
@@ -2517,3 +2521,4 @@ slider>input{max-width:100%}
 .thematic-legend ul li.instagram.disabled{background-color:#FFB61E;color:#EEE}
 .thematic-legend ul li.others{background-color:#fff;color:#0036B3}
 .thematic-legend ul li.others.disabled{background-color:#0036B3;color:#EEE}
+.daterange input.form-control{width:100px;max-width:100px}

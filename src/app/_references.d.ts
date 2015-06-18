@@ -14,6 +14,7 @@
 ///<reference path="typings/typeahead/typeahead.d.ts"/>
 ///<reference path="typings/angularytics/angularytics.d.ts"/>
 ///<reference path="typings/moment/moment.d.ts"/>
+///<reference path="typings/underscore/underscore.d.ts"/>
 ///<reference path="shared/support/rx-angular.d.ts"/>
 ///<reference path="shared/support/utilities.d.ts"/>
 ///<reference path="shared/custom-filters.ts"/>

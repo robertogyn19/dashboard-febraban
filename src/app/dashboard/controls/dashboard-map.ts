@@ -21,7 +21,8 @@ module gogeo {
     map: L.Map;
     popup: L.Popup;
     query: any = { query: { filtered: { filter: { } } } };
-    selected: string = "inactive";
+    businessSelected: boolean = true;
+    crimesSelected: boolean = false;
     mapTypes: Array<string> = [ "point", "cluster", "intensity" ];
     mapSelected: string = "point";
     baseLayers: L.FeatureGroup<L.ILayer> = null;
@@ -32,6 +33,11 @@ module gogeo {
     baseLayerSelected: string = "day";
     levent: any = null;
     _selectedMap = new Rx.BehaviorSubject<string>(null);
+    layerNames: Array<string> = [
+      Configuration.getBusinessCollection()
+      // ,
+      // Configuration.getCrimesCollection()
+    ];
 
     constructor(
           private $scope:     ng.IScope,
@@ -60,12 +66,14 @@ module gogeo {
     initializeLayer() {
       this.map.addLayer(this.layerGroup);
 
+      var layers = null;
+
       layers = this.createLayers([ Configuration.getCensusCollection() ], "gogeo_default");
       for (var i in layers) {
         this.map.addLayer(layers[i]);
       }
 
-      var layers = this.createLayers();
+      layers = this.createLayers(this.layerNames);
       for (var i in layers) {
         this.layerGroup.addLayer(layers[i]);
       }
@@ -130,17 +138,7 @@ module gogeo {
       }
     }
 
-    private createLayers(layers?: Array<string>, stylename?: string): Array<L.ILayer> {
-      if (!layers) {
-        layers = [
-          Configuration.getBusinessCollection()
-        ];
-      }
-
-      if (!stylename) {
-        stylename = "gogeo_many_points";
-      }
-
+    private createLayers(layers: Array<string>, stylename?: string): Array<L.ILayer> {
       var array = [];
 
       layers.forEach((layerName) => {
@@ -173,6 +171,12 @@ module gogeo {
         stylename = "gogeo_intensity";
       }
 
+      if (collection === Configuration.getBusinessCollection()) {
+        stylename = "gogeo_many_points";
+      } else if (collection === Configuration.getCrimesCollection()) {
+        stylename = "crimes_style";
+      }
+
       var url = "/map/"
         + database + "/" +
         collection + "/{z}/{x}/{y}/"
@@ -187,6 +191,26 @@ module gogeo {
       }
 
       return Configuration.prefixUrl(url);
+    }
+
+    toggleLayer(type: string) {
+      if (type === "business") {
+        this.addOrRemoveFromLayers(Configuration.getBusinessCollection());
+      } else {
+        this.addOrRemoveFromLayers(Configuration.getCrimesCollection());
+      }
+
+      this.updateLayer();
+    }
+
+    private addOrRemoveFromLayers(layerName: string) {
+      var index = this.layerNames.indexOf(layerName);
+
+      if (index >= 0) {
+        this.layerNames.splice(index, 1);
+      } else {
+        this.layerNames.push(layerName);
+      }
     }
 
     switchBaseLayer() {
@@ -221,7 +245,7 @@ module gogeo {
       var point = levent.latlng;
       var radius = this.service.getRadius();
       var circleOptions = {
-        color: "red"
+        color: "yellow"
       };
       var circle = L.circle(point, radius * 1000, circleOptions);
 
@@ -248,7 +272,7 @@ module gogeo {
 
     private updateLayer() {
       this.layerGroup.clearLayers();
-      var layers = this.createLayers();
+      var layers = this.createLayers(this.layerNames);
 
       for (var i in layers) {
         this.layerGroup.addLayer(layers[i]);

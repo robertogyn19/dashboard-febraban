@@ -23,7 +23,7 @@
   (hd01_s006 + hd01_s007) as age_20_29, -- 20 to 29 years
   (hd01_s008 + hd01_s009 + hd01_s010) as age_30_44, -- 30 to 44 years
   (hd01_s011 + hd01_s012 + hd01_s013 + hd01_s014) as age_45_64, -- 45 to 64 years
-  (hd01_s015 + hd01_s016 + hd01_s017 + hd01_s018 + hd01_s019) as age_85_over, -- 85 years and over
+  (hd01_s015 + hd01_s016 + hd01_s017 + hd01_s018 + hd01_s019) as age_65_over, -- 65 years and over
   /* 
    * Raças
    *
@@ -44,7 +44,7 @@
   ((s.hc01_est_vc06 + hc01_est_vc07)*s.hc01_est_vc01/100)::integer as household_income_35k_75k, -- Househould income estimate - $35,000 to $74,999
   ((s.hc01_est_vc08 + hc01_est_vc09)*s.hc01_est_vc01/100)::integer as household_income_75k_150k, -- Househould income estimate - $75,000 to $149,999
   ((s.hc01_est_vc10)*s.hc01_est_vc01/100)::integer as household_income_150k_200k, -- Househould income estimate - $150,000 to $199,999
-  ((s.hc01_est_vc11)*s.hc01_est_vc01/100)::integer as household_income_200k_more, -- Househould income estimate - $150,000 to $199,999
+  ((s.hc01_est_vc11)*s.hc01_est_vc01/100)::integer as household_income_200k_more, -- Househould income estimate - $200,000 and over
   /*
    * Renda média por domicílio
    *

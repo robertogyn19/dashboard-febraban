@@ -1,6 +1,5 @@
 ///<reference path="./_references.d.ts"/>
 
-
 module gogeo {
 
   export var settings;
@@ -56,6 +55,36 @@ module gogeo {
 
     static getStyleName(): string {
       return "";
+    }
+
+    static getCensusFields(): Array<string> {
+      return [
+        "geo_id",
+        "geo_id2",
+        "families",
+        "nonfamily",
+        "households",
+        "household_median_income",
+        "white",
+        "black",
+        "indian",
+        "asian",
+        "hawaiian",
+        "others",
+        "two_races",
+        "age_under_5",
+        "age_5_19",
+        "age_20_29",
+        "age_30_44",
+        "age_45_64",
+        "age_85_over",
+        "household_income_less_15k",
+        "household_income_15k_35k",
+        "household_income_35k_75k",
+        "household_income_75k_150k",
+        "household_income_150k_200k",
+        "household_income_200k_more"
+      ];
     }
 
     static getCollectionName(): string {

@@ -25,14 +25,6 @@ module gogeo {
     ];
 
     private _lastGeomSpace:IGeomSpace = null;
-    private _lastHashtagFilter:IBucket = null;
-    private _lastSomethingTerms:string[] = [];
-    private _lastPlaceString: string = null;
-    private _lastDateRange: IDateRange = null;
-    private _lastMapCenter: L.LatLng = null;
-    private _lastMapZoom: number = 0;
-    private _lastMapType: string = null;
-    private _lastMapBase: string = null;
     private _loading: boolean = true;
     private _lastRadius: number = 0;
 
@@ -65,10 +57,9 @@ module gogeo {
     };
 
     _geomSpaceObservable = new Rx.BehaviorSubject<IGeomSpace>(null);
-    _dateRangeObservable = new Rx.BehaviorSubject<IDateRange>(null);
     _lastQueryObservable = new Rx.BehaviorSubject<any>(null);
-    // _tweetObservable = new Rx.BehaviorSubject<Array<ITweet>>(null);
     _lastCircleObservable = new Rx.BehaviorSubject<L.LatLng>(null);
+    _lastCensusObservable = new Rx.BehaviorSubject<Array<ICensusDocument>>(null);
 
     constructor(private $q:       ng.IQService,
           private $http:      ng.IHttpService,
@@ -95,6 +86,10 @@ module gogeo {
 
     get circleObservable():Rx.Observable<L.LatLng> {
       return this._lastCircleObservable;
+    }
+
+    get censusObservable():Rx.Observable<Array<ICensusDocument>> {
+      return this._lastCensusObservable;
     }
 
     private calculateNeSW(bounds: L.LatLngBounds) {
@@ -153,15 +148,16 @@ module gogeo {
     }
 
     censusGeoSearch(geom: IGeom) {
-      var fields = [
-       "geo_id",
-       "geo_id2",
-       "families",
-       "nonfamily",
-       "households",
-       "household_median_income"
-      ];
+      var fields = Configuration.getCensusFields();
       return new GogeoGeosearch(this.$http, geom, Configuration.getCensusCollection(), this._lastRadius, "kilometer", fields, 10);
+    }
+
+    updateCensus(geom: IGeom) {
+      var ggsc = this.censusGeoSearch(geom);
+
+      ggsc.execute((result: Array<ICensusDocument>) => {
+        this._lastCensusObservable.onNext(result);
+      });
     }
 
     updateGeomSpace(geom: IGeomSpace) {
@@ -184,20 +180,6 @@ module gogeo {
     }
 
     getDateHistogramAggregation() {
-      // var url = Configuration.makeUrl("aggregations", Configuration.getCollectionName(), "date_histogram");
-      // var q = this.composeQuery().requestData.q;
-
-      // var options = {
-      //   params: {
-      //     mapkey: Configuration.getMapKey(),
-      //     field: Configuration.getDateField(),
-      //     interval: Configuration.getInterval(),
-      //     date_format: "YYYY-MM-DD",
-      //     q: JSON.stringify(q)
-      //   }
-      // };
-
-      // return this.$http.get<Array<IDateHistogram>>(url, options);
     }
 
     private getTweetData(latlng: L.LatLng, zoom: number, thematicQuery?: ThematicQuery) {
