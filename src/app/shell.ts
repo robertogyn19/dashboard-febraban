@@ -45,18 +45,6 @@ module gogeo {
       return url;
     }
 
-    static getTotalTweetsUrl(): string {
-      return "http://maps.demos.gogeo.io/1.0/tools/totalRead";
-    }
-
-    static getPlaceUrl(place: string): string {
-      return "http://maps.demos.gogeo.io/1.0/tools/where/" + place;
-    }
-
-    static getStyleName(): string {
-      return "";
-    }
-
     static getCensusFields(): Array<string> {
       return [
         "geo_id",
@@ -88,7 +76,6 @@ module gogeo {
     }
 
     static getCollectionName(): string {
-      // return "census_sf";
       return <string> settings["collection"];
     }
 
@@ -104,22 +91,13 @@ module gogeo {
       return "census_sf";
     }
 
-    static getShortenUrl(): string {
-      return "http://maps.demos.gogeo.io/1.0/tools/short";
+    static getCrimesCategory(): string {
+      return "category";
     }
 
-    static getXBackDays(): number {
-      // TODO: Export this to development/deployment config file
-      return 15;
-    }
     static getMapKey(): string {
       // TODO: Export this to development/deployment config file
       return "123";
-    }
-
-    static getDateField(): string {
-      // TODO: Export this to development/deployment config file
-      return "date";
     }
 
     static getInterval(): string {
@@ -127,19 +105,9 @@ module gogeo {
       return "day";
     }
 
-    static getAggField(): string {
-      // TODO: Export this to development/deployment config file
-      return "place_type"; 
-    }
-
     static getAggSize(): number {
       // TODO: Export this to development/deployment config file
       return 0;
-    }
-
-    static getPlaceFields(): Array<string> {
-      // TODO: Export this to development/deployment config file
-      return [ "city", "state" ];
     }
 
     static getDatabaseName(): string {

@@ -10,10 +10,6 @@
  */
 
 module gogeo {
-  export interface TotalTweets {
-    count: number;
-  }
-
   export class DashboardService {
     static $named = "dashboardService";
     static $inject = [
@@ -56,10 +52,10 @@ module gogeo {
       ]
     };
 
-    _geomSpaceObservable = new Rx.BehaviorSubject<IGeomSpace>(null);
     _lastQueryObservable = new Rx.BehaviorSubject<any>(null);
     _lastCircleObservable = new Rx.BehaviorSubject<L.LatLng>(null);
     _lastCensusObservable = new Rx.BehaviorSubject<Array<ICensusDocument>>(null);
+    _lastCrimesObservable = new Rx.BehaviorSubject<IGogeoGeoAgg>(null);
 
     constructor(private $q:       ng.IQService,
           private $http:      ng.IHttpService,
@@ -76,10 +72,6 @@ module gogeo {
       return this._loading;
     }
 
-    get geomSpaceObservable():Rx.Observable<IGeomSpace> {
-      return this._geomSpaceObservable;
-    }
-
     get queryObservable():Rx.Observable<any> {
       return this._lastQueryObservable;
     }
@@ -90,6 +82,113 @@ module gogeo {
 
     get censusObservable():Rx.Observable<Array<ICensusDocument>> {
       return this._lastCensusObservable;
+    }
+
+    get crimesObservable():Rx.Observable<IGogeoGeoAgg> {
+      return this._lastCrimesObservable;
+    }
+
+    getRadius(): number {
+      return this._lastRadius;
+    }
+
+    updateRadius(radius: number) {
+      this._lastRadius = radius;
+    }
+
+    updateDashboardData(point: L.LatLng) {
+      this._lastCircleObservable.onNext(point);
+    }
+
+    crimesGeoAgg(geom: IGeom) {
+      return this.getGogeoGeoAgg(geom, Configuration.getCrimesCollection(), Configuration.getCrimesCategory());
+    }
+
+    updateCrimesAgg(geom: IGeom) {
+      var geoagg = this.crimesGeoAgg(geom);
+
+      geoagg.execute((result: IGogeoGeoAgg) => {
+        this._lastCrimesObservable.onNext(result);
+        this.updateCrimesDateHistogram(geom, result);
+      });
+    }
+
+    updateCrimesDateHistogram(geom: IGeom, result: IGogeoGeoAgg) {
+      var queries: Array<MatchPhraseQuery> = [];
+
+      result.buckets.slice(0, 5).forEach((item: IBucket) => {
+        var matchQuery = new MatchPhraseQuery(Configuration.getCrimesCategory(), item.key);
+        queries.push(matchQuery);
+      });
+
+      var boolQuery = new BoolQuery();
+
+      queries.forEach((q: Query) => {
+        boolQuery.addMustQuery(q);
+      });
+
+      console.log("matchQuery", JSON.stringify(boolQuery.build(), null, 2));
+      console.log();
+
+      var point = <IPoint>geom;
+
+      console.log("geom", point.coordinates);
+
+      var options = {
+        center: {
+          x: point.coordinates[0],
+          y: point.coordinates[1]
+        }
+      };
+      var radius = (this._lastRadius / 100);
+
+      // console.log("********** radius", radius);
+
+      Hexagonal.precision(15);
+
+      var hexagon = Hexagonal.Hexagon.byRadius(radius, options);
+      // console.log("hexagon", hexagon.vertices());
+      // var teste = new Hexagonal.Hexagon.byRadius();
+      var coordinates = [];
+
+      hexagon.vertices().forEach((vertex: Vertex) => {
+        // console.log("vertex", vertex);
+        coordinates.push([vertex.x, vertex.y]);
+      });
+
+      coordinates.push([hexagon.vertices()[0].x, hexagon.vertices()[0].y]);
+
+      var hexGeoJson = {
+        type: "Feature",
+        properties: {},
+        geometry: {
+          type: "Polygon",
+          coordinates: [coordinates]
+        }
+      };
+
+      // console.log("hexGeoJson", JSON.stringify(hexGeoJson, null, 2));
+    }
+
+    businessGeoAgg(geom: IGeom) {
+      return this.getGogeoGeoAgg(geom, Configuration.getBusinessCollection(), "state");
+    }
+
+    getGogeoGeoAgg(geom: IGeom, collectionName: string, field: string) {
+      return new GogeoGeoagg(this.$http, geom, collectionName, field, this._lastRadius);
+    }
+
+    censusGeoSearch(geom: IGeom) {
+      var fields = Configuration.getCensusFields();
+      return new GogeoGeosearch(this.$http, geom, Configuration.getCensusCollection(), this._lastRadius, "kilometer", fields, 10);
+    }
+
+    updateCensus(geom: IGeom) {
+      var ggsc = this.censusGeoSearch(geom);
+
+      ggsc.execute((result: Array<ICensusDocument>) => {
+        this._lastCensusObservable.onNext(result);
+      });
     }
 
     private calculateNeSW(bounds: L.LatLngBounds) {
@@ -118,95 +217,7 @@ module gogeo {
         coordinates: coordinates
       }
     }
-
-    getRadius(): number {
-      return this._lastRadius;
-    }
-
-    updateRadius(radius: number) {
-      this._lastRadius = radius;
-    }
-
-    loadGeoJson() {
-      return this.$http.get("san-francisco.geo.json");
-    }
-
-    updateDashboardData(point: L.LatLng) {
-      this._lastCircleObservable.onNext(point);
-    }
-
-    crimesGeoAgg(geom: IGeom) {
-      return this.getGogeoGeoAgg(geom, Configuration.getCrimesCollection(), "category");
-    }
-
-    businessGeoAgg(geom: IGeom) {
-      return this.getGogeoGeoAgg(geom, Configuration.getBusinessCollection(), "state");
-    }
-
-    getGogeoGeoAgg(geom: IGeom, collectionName: string, field: string) {
-      return new GogeoGeoagg(this.$http, geom, collectionName, field, this._lastRadius);
-    }
-
-    censusGeoSearch(geom: IGeom) {
-      var fields = Configuration.getCensusFields();
-      return new GogeoGeosearch(this.$http, geom, Configuration.getCensusCollection(), this._lastRadius, "kilometer", fields, 10);
-    }
-
-    updateCensus(geom: IGeom) {
-      var ggsc = this.censusGeoSearch(geom);
-
-      ggsc.execute((result: Array<ICensusDocument>) => {
-        this._lastCensusObservable.onNext(result);
-      });
-    }
-
-    updateGeomSpace(geom: IGeomSpace) {
-      this._loading = true;
-      this._lastGeomSpace = geom;
-      this._geomSpaceObservable.onNext(geom);
-    }
-
-    updateGeomSpaceByBounds(bounds: L.LatLngBounds) {
-      var point = this.calculateNeSW(bounds);
-      var geomSpace = this.pointToGeoJson(point);
-
-      if (geomSpace) {
-        this.updateGeomSpace(geomSpace);
-      }
-    }
-
-    getTweet(latlng: L.LatLng, zoom: number, thematicQuery?: ThematicQuery) {
-      return this.getTweetData(latlng, zoom, thematicQuery);
-    }
-
-    getDateHistogramAggregation() {
-    }
-
-    private getTweetData(latlng: L.LatLng, zoom: number, thematicQuery?: ThematicQuery) {
-    }
-
-    totalTweets() {
-      var url = Configuration.getTotalTweetsUrl();
-      return this.$http.get(url);
-    }
-
-    search() {
-      if (!this._lastGeomSpace) {
-        return;
-      }
-
-      this._loading = true;
-
-      // var query = this.composeQuery();
-      // this._lastQueryObservable.onNext(query.requestData.q);
-    }
-
-    // composeQuery(): DashboardQuery {
-    //   var query = new DashboardQuery(this.$http, this._lastGeomSpace);
-    //   return query;
-    // }
   }
 
   registerService(DashboardService);
-
 }

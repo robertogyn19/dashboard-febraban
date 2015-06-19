@@ -54,7 +54,6 @@ module gogeo {
       this.baseLayers.addLayer(this.getDayMap());
       this.map.addLayer(this.baseLayers);
 
-      this.map.on("moveend", (e) => this.onMapLoaded());
       this.map.on("click", (e) => this.addCircle(e));
 
       this.initializeLayer();
@@ -225,10 +224,6 @@ module gogeo {
       }
 
       this.baseLayers.bringToBack();
-    }
-
-    onMapLoaded() {
-      this.service.updateGeomSpaceByBounds(this.map.getBounds());
     }
 
     hidePopup() {

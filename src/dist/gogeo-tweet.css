@@ -2393,6 +2393,7 @@ body,html{height:100%;min-height:100%}
 .jumbotron h1{font-size:48px;line-height:73px;font-weight:600}
 .jumbotron p{font-size:36px;line-height:55px}
 .jumbotron .btn-primary{font-size:24px;line-height:36px;font-weight:600;text-transform:uppercase;padding:21px 85px;margin-top:25px;border-radius:4px}
+.daterange input.form-control{width:100px;max-width:100px}
 .chart-legend span.legend-item,.legend{margin-left:5px}
 @font-face{font-family:"Titillium Web",sans-serif}
 body,h1,h2,h3,h4,h5,h6{font-family:"Titillium Web"!important}
@@ -2521,4 +2522,3 @@ slider>input{max-width:100%}
 .thematic-legend ul li.instagram.disabled{background-color:#FFB61E;color:#EEE}
 .thematic-legend ul li.others{background-color:#fff;color:#0036B3}
 .thematic-legend ul li.others.disabled{background-color:#0036B3;color:#EEE}
-.daterange input.form-control{width:100px;max-width:100px}

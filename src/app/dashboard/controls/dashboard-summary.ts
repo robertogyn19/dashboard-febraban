@@ -5,13 +5,10 @@ module gogeo {
   export class DashboardSummaryController {
     static $inject = [
       "$scope",
-      "$timeout",
       DashboardService.$named
     ];
 
-    crimes: Array<IBucket> = [
-    ];
-
+    crimes: Array<IBucket> = [];
     companies: number = 0;
     crimesCount: number = 0;
     households: number = 0;
@@ -21,7 +18,6 @@ module gogeo {
 
     constructor(
         private $scope:   ng.IScope,
-        private $timeout: ng.ITimeoutService,
         private service:  DashboardService) {
 
       this.service.circleObservable
@@ -35,8 +31,8 @@ module gogeo {
             ]
           };
 
-          this.handleCrimesResult(this.service.crimesGeoAgg(geom));
           this.handleCompaniesResult(this.service.businessGeoAgg(geom));
+          this.service.updateCrimesAgg(geom);
           this.service.updateCensus(geom);
         });
 
@@ -45,13 +41,17 @@ module gogeo {
         .subscribe((result: Array<ICensusDocument>) => {
           this.handleCensusResult(result);
         });
+
+      this.service.crimesObservable
+        .where(result => result != null)
+        .subscribe((result: IGogeoGeoAgg) => {
+          this.handleCrimesResult(result);
+        });
     }
 
-    handleCrimesResult(geoagg: GogeoGeoagg) {
-      geoagg.execute((result: IGogeoGeoAgg) => {
-        this.crimesCount = result.doc_total;
-        this.crimes = result.buckets.slice(0, 5);
-      });
+    handleCrimesResult(result: IGogeoGeoAgg) {
+      this.crimesCount = result.doc_total;
+      this.crimes = result.buckets.slice(0, 5);
     }
 
     handleCompaniesResult(geoagg: GogeoGeoagg) {

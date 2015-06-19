@@ -8,26 +8,6 @@ module gogeo {
     }
   }
 
-  export class TextQueryBuilder implements Query {
-    static HashtagText = ["entities.hashtags.text"];
-    static UserScreenName = ["user.screen_name"];
-    static Text = ["text"];
-    static Place = Configuration.getPlaceFields();
-
-    constructor(public fields: Array<string>, public term: string) {}
-
-    build() {
-      return {
-        query: {
-          query_string: {
-            query: this.term,
-            fields: this.fields
-          }
-        }
-      };
-    }
-  }
-
   export class BoolQuery implements Query {
     private requestData: any = {
       must: []
@@ -48,71 +28,19 @@ module gogeo {
     }
   }
 
-  export class ThematicQuery implements Query {
-    constructor(public queries: Array<Query>, public prevQuery?: Query) {}
+  export class MatchPhraseQuery implements Query {
+    query: any = {};
+
+    constructor(field: string, term: string) {
+      this.query[field] = term;
+    }
 
     build() {
-      var query = {
+      return {
         query: {
-          filtered: {
-            filter: {
-              or: {}
-            }
-          }
+          match_phrase: this.query
         }
       };
-
-      var filters = [];
-
-      if (this.prevQuery) {
-        query["query"]["filtered"]["query"] = this.prevQuery["query"];
-      }
-
-      for (var index in this.queries) {
-        var stq = this.queries[index];
-
-        if (stq instanceof SourceTermQuery || stq instanceof TextQueryBuilder) {
-          filters.push(stq.build());
-        } else if (stq["query"]["filtered"]["filter"]["or"]["filters"]) {
-          var subFilters = stq["query"]["filtered"]["filter"]["or"]["filters"];
-          for (var k in subFilters) {
-            filters.push(subFilters[k]);
-          }
-        }
-      }
-
-      query["query"]["filtered"]["filter"]["or"]["filters"] = filters;
-
-      return query;
-    }
-  }
-
-  export class DateRangeQueryBuilder implements Query {
-    static DateRange = Configuration.getDateField();
-
-    constructor(public field: string, public range: IDateRange) {}
-
-    build() {
-      var query = {
-        range : {}
-      };
-
-      var fieldRestriction = query.range[this.field] = {};
-      var range = this.range;
-
-      if (range.start) {
-        fieldRestriction["gte"] = this.format(range.start);
-      }
-
-      if (range.end) {
-        fieldRestriction["lte"] = this.format(range.end);
-      }
-
-      return query;
-    }
-
-    format(date: Date) {
-      return moment(date).format("YYYY-MM-DD");
     }
   }
 

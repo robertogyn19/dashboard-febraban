@@ -2,8 +2,7 @@ module gogeo {
 
   export class GogeoGeoagg {
     private params: any = {};
-
-    collection: string = null;
+    private collection: string = null;
 
     constructor(
       private $http: ng.IHttpService,

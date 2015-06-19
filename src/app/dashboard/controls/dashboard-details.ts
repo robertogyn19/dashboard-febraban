@@ -4,39 +4,36 @@
 
 module gogeo {
 
-    class DashboardDetailsController {
-        static $inject = [
-            "$scope",
-            "$interval",
-            "$filter",
-            DashboardService.$named
-        ];
+  class DashboardDetailsController {
+    static $inject = [
+      "$scope",
+      "$interval",
+      "$filter",
+      DashboardService.$named
+    ];
 
-        constructor(private $scope: ng.IScope,
-                    private $interval: ng.IIntervalService,
-                    private $filter: ng.IFilterService,
-                    private service: DashboardService) {
-        }
-
-        initialize() {
-        }
-
-        unselect() {
-        }
+    constructor(private $scope: ng.IScope,
+          private $interval: ng.IIntervalService,
+          private $filter: ng.IFilterService,
+          private service: DashboardService) {
     }
 
-    registerDirective("dashboardDetails", () => {
-        return {
-            restrict: "CE",
-            templateUrl: "dashboard/controls/dashboard-details-template.html",
-            controller: DashboardDetailsController,
-            controllerAs: "details",
-            bindToController: true,
-            scope: true,
+    initialize() {
+    }
+  }
 
-            link(scope, element, attrs, controller:DashboardDetailsController) {
-                controller.initialize();
-            }
-        };
-    });
+  registerDirective("dashboardDetails", () => {
+    return {
+      restrict: "CE",
+      templateUrl: "dashboard/controls/dashboard-details-template.html",
+      controller: DashboardDetailsController,
+      controllerAs: "details",
+      bindToController: true,
+      scope: true,
+
+      link(scope, element, attrs, controller:DashboardDetailsController) {
+        controller.initialize();
+      }
+    };
+  });
 }
