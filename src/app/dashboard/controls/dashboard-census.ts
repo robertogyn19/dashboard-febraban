@@ -3,11 +3,17 @@
 
 module gogeo {
   export class DashboardCensusController {
+    widthHash: any = {
+      1280: 295,
+      1366: 315,
+      1920: 490
+    };
+
     barChartOptions: any = {
       chart: {
         type: "discreteBarChart",
         height: 300,
-        width: 450,
+        width: this.getChartWidth(),
         margin: {
           top: 20,
           right: 20,
@@ -33,11 +39,15 @@ module gogeo {
     incomeChartOptions: any = {};
     ageChartOptions: any = {};
 
+    incomeChartApi: any = {};
+    ageChartApi: any = {};
+    pieChartApi: any = {};
+
     pieChartOptions: any = {
       chart: {
         type: "pieChart",
-        height: 400,
-        width: 400,
+        height: this.getChartWidth(),
+        width: this.getChartWidth(),
         x: function(d) { return d.label; },
         y: function(d) { return d.value; },
         showLabels: false,
@@ -59,15 +69,15 @@ module gogeo {
           return content;
         },
         legend: {
-          width: 400,
-          height: 300,
+          // width: 400,
+          // height: 300,
           key: function(d) {
             return d.key;
           },
           margin: {
             top: 5,
             right: 5,
-            bottom: 5,
+            bottom: 25,
             left: 5
           }
         }
@@ -213,11 +223,13 @@ module gogeo {
 
     static $inject = [
       "$scope",
+      "$window",
       DashboardService.$named
     ];
 
     constructor(
         private $scope:  ng.IScope,
+        private $window: ng.IWindowService,
         private service: DashboardService) {
 
       this.incomeChartOptions = _.clone(this.barChartOptions);
@@ -251,6 +263,34 @@ module gogeo {
         .subscribe((result: Array<ICensusDocument>) => {
           this.handleCensusResult(result);
         });
+
+      var w = angular.element(this.$window);
+
+      w.bind("resize", () => {
+        var width = this.$window.innerWidth;
+        var chartWidth = this.getChartWidth();
+
+        this.incomeChartOptions.chart.width = chartWidth;
+        this.ageChartOptions.chart.width = chartWidth;
+
+        this.pieChartOptions.chart.width = chartWidth;
+        this.pieChartOptions.chart.height = chartWidth;
+
+        this.incomeChartApi.refresh();
+        this.ageChartApi.refresh();
+        this.pieChartApi.refresh();
+      });
+    }
+
+    getChartWidth(): number {
+      var width = this.$window.innerWidth;
+      var chartWidth = this.widthHash[width];
+
+      if (!chartWidth) {
+        chartWidth = parseInt((width / 3).toFixed(0)) - 135;
+      }
+
+      return chartWidth;
     }
 
     handleCensusResult(result: Array<ICensusDocument>) {

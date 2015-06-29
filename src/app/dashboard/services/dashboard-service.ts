@@ -127,47 +127,8 @@ module gogeo {
         boolQuery.addMustQuery(q);
       });
 
-      console.log("matchQuery", JSON.stringify(boolQuery.build(), null, 2));
-      console.log();
-
-      var point = <IPoint>geom;
-
-      console.log("geom", point.coordinates);
-
-      var options = {
-        center: {
-          x: point.coordinates[0],
-          y: point.coordinates[1]
-        }
-      };
-      var radius = (this._lastRadius / 100);
-
-      // console.log("********** radius", radius);
-
-      Hexagonal.precision(15);
-
-      var hexagon = Hexagonal.Hexagon.byRadius(radius, options);
-      // console.log("hexagon", hexagon.vertices());
-      // var teste = new Hexagonal.Hexagon.byRadius();
-      var coordinates = [];
-
-      hexagon.vertices().forEach((vertex: Vertex) => {
-        // console.log("vertex", vertex);
-        coordinates.push([vertex.x, vertex.y]);
-      });
-
-      coordinates.push([hexagon.vertices()[0].x, hexagon.vertices()[0].y]);
-
-      var hexGeoJson = {
-        type: "Feature",
-        properties: {},
-        geometry: {
-          type: "Polygon",
-          coordinates: [coordinates]
-        }
-      };
-
-      // console.log("hexGeoJson", JSON.stringify(hexGeoJson, null, 2));
+      // console.log("matchQuery", JSON.stringify(boolQuery.build(), null, 2));
+      // console.log();
     }
 
     businessGeoAgg(geom: IGeom) {

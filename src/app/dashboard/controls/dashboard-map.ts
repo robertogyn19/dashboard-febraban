@@ -20,7 +20,7 @@ module gogeo {
 
     map: L.Map;
     popup: L.Popup;
-    query: any = { query: { filtered: { filter: { } } } };
+    query: any = null;
     businessSelected: boolean = true;
     crimesSelected: boolean = false;
     mapTypes: Array<string> = [ "point", "cluster", "intensity" ];
@@ -129,6 +129,7 @@ module gogeo {
     }
 
     private queryHandler(query: any) {
+      console.log("query", JSON.stringify(query, null, 2));
       if (JSON.stringify(query) !== JSON.stringify(this.query)) {
         this.query = query;
         this.updateLayer();
@@ -242,12 +243,17 @@ module gogeo {
       var circleOptions = {
         color: "yellow"
       };
-      var circle = L.circle(point, radius * 1000, circleOptions);
+      var radiusInMeters = radius * 1000;
+      var circle = L.circle(point, radiusInMeters, circleOptions);
 
       circle.on("click", (e) => this.addCircle(e));
 
       this.circlesGroup.addLayer(circle);
       this.service.updateDashboardData(point);
+
+      // var polygon = LGeo.circle(point, radiusInMeters).toGeoJSON()["geometry"];
+      // console.log("radius", radius);
+      // console.log("polygon", JSON.stringify(polygon, null, 2));
     }
 
     changeMapType(element: any) {

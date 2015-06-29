@@ -10,32 +10,32 @@
         </div>
       </div>
 
-      <div class="row">
-        <div class="col-sm-4 col-sm-offset-2">
-          <div class="checkbox">
-            <label>
-              <input type="checkbox" ng-model="map.businessSelected" ng-click="map.toggleLayer('business')"> Companies
-              <span class="legend business"></span>
-            </label>
-          </div>
+      <div class="row" style="margin-bottom: 0.5em">
+        <div class="col-sm-12">
+        <h6 class="text-muted">
+            Display Additional Data
+          </h6>
+        <center>
+        <div class="btn-group btn-group-sm" data-toggle="buttons">
+          <label class="btn btn-primary active" ng-click="map.toggleLayer('business')">
+            <input type="checkbox" ng-model="map.businessSelected" > Companies
+          </label>
+          <label class="btn btn-danger" ng-click="map.toggleLayer('crimes')">
+            <input type="checkbox" ng-model="map.crimesSelected" > Crimes
+          </label>
         </div>
-        <div class="col-sm-5">
-          <div class="checkbox">
-            <label>
-              <input type="checkbox" ng-model="map.crimesSelected" ng-click="map.toggleLayer('crimes')"> Crimes
-              <span class="legend crimes"></span>
-            </label>
-          </div>
+        </center>
         </div>
       </div>
 
+      <div class="row">
       <div class="tab-container" role="tabpanel">
         <ul class="nav nav-tabs" role="navigation">
-          <li role="presentation" class="active">
+          <!-- <li role="presentation" class="active">
             <a href="" data-target="#tab3" aria-controls="tab3" role="tab" data-toggle="tab">Crimes</a>
-          </li>
+          </li> -->
 
-          <li role="presentation">
+          <li role="presentation" class="active">
             <a href="" data-target="#tab2" aria-controls="tab2" role="tab" data-toggle="tab">Census</a>
           </li>
 
@@ -53,7 +53,7 @@
             </div>
           </div>
 
-          <div class="tab-pane" id="tab2" role="tabpanel">
+          <div class="tab-pane active" id="tab2" role="tabpanel">
             <div class="row">
               <div class="col-sm-12">
                 <dashboard-census></dashboard-census>
@@ -61,7 +61,7 @@
             </div>
           </div>
 
-          <div class="tab-pane active" id="tab3" role="tabpanel">
+          <div class="tab-pane" id="tab3" role="tabpanel">
             <div class="row">
               <div class="col-sm-12">
                 <dashboard-crimes></dashboard-crimes>
@@ -70,6 +70,9 @@
           </div>
         </div>
       </div>
+      </div>
+
+
     </div>
   </div>
 

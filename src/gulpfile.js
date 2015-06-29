@@ -103,7 +103,7 @@ gulp.task("bundleCoreJS", function() {
     fromBower("angular-touch/angular-touch.min.js"),
     fromBower("venturocket-angular-slider/build/angular-slider.min.js"),
     fromBower("underscore/underscore-min.js"),
-    fromBower("hexagonal/hexagonal.js"),
+    fromBower("leaflet-geodesy/leaflet-geodesy.js"),
     "app/shared/support/rx-angular.js",
     "app/shared/support/utilities.js",
     "./lib/js/leaflet.tilecluster.js",
