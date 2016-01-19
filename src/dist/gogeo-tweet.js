@@ -130,15 +130,18 @@ var gogeo;
         return Configuration;
     })();
     gogeo.Configuration = Configuration;
-    var mod = angular.module("gogeo", ["ngRoute", "nvd3", "vr.directives.slider", "angular-capitalize-filter"]).config([
+    var mod = angular.module("gogeo", ["ngRoute", "nvd3", "vr.directives.slider", "angular-capitalize-filter"])
+        .config([
         "$routeProvider",
         function ($routeProvider) {
-            $routeProvider.when("/dashboard", {
+            $routeProvider
+                .when("/dashboard", {
                 controller: "DashboardController",
                 controllerAs: "dashboard",
                 templateUrl: "dashboard/page.html",
                 reloadOnSearch: false
-            }).otherwise({
+            })
+                .otherwise({
                 redirectTo: "/dashboard",
                 reloadOnSearch: false
             });
@@ -199,7 +202,10 @@ var gogeo;
          */
         AbstractController.prototype.initialize = function () {
             var _this = this;
-            var selfProperty = Enumerable.from(this.$scope).where(function (x) { return x.value === _this; }).select(function (x) { return x.key; }).firstOrDefault();
+            var selfProperty = Enumerable.from(this.$scope)
+                .where(function (x) { return x.value === _this; })
+                .select(function (x) { return x.key; })
+                .firstOrDefault();
             this.propertyName = selfProperty;
             this.$scope.$on("$destroy", function () { return _this.dispose(); });
         };
@@ -291,7 +297,9 @@ var gogeo;
         DashboardQuery.prototype.execute = function (resultHandler) {
             var url = gogeo.Configuration.makeUrl("geoagg");
             this.requestData["mapkey"] = gogeo.Configuration.getMapKey();
-            return this.$http.post(url, this.requestData).success(resultHandler);
+            return this.$http
+                .post(url, this.requestData)
+                .success(resultHandler);
         };
         return DashboardQuery;
     })();
@@ -391,7 +399,9 @@ var gogeo;
                 q: this.q,
                 mapkey: gogeo.Configuration.getMapKey()
             };
-            return this.$http.post(url, this.requestData).success(resultHandler);
+            return this.$http
+                .post(url, this.requestData)
+                .success(resultHandler);
         };
         return GogeoGeosearch;
     })();
@@ -420,7 +430,9 @@ var gogeo;
         GogeoGeoagg.prototype.execute = function (resultHandler) {
             var url = gogeo.Configuration.makeUrl("geoagg", this.collection);
             var requestData = this.params;
-            return this.$http.post(url, requestData).success(resultHandler);
+            return this.$http
+                .post(url, requestData)
+                .success(resultHandler);
         };
         return GogeoGeoagg;
     })();
@@ -615,11 +627,7 @@ var gogeo;
             var se = [ne[0], sw[1]];
             var coordinates = [
                 [
-                    sw,
-                    nw,
-                    ne,
-                    se,
-                    sw
+                    sw, nw, ne, se, sw
                 ]
             ];
             return {
@@ -697,14 +705,16 @@ var gogeo;
  */
 var gogeo;
 (function (gogeo) {
-    angular.module("gogeo").directive("welcomeMap", [
+    angular.module("gogeo")
+        .directive("welcomeMap", [
         function () {
             return {
                 restrict: "C",
                 // template: "<div></div>",
                 link: function (scope, element, attrs) {
                     var rawElement = element[0];
-                    var url = "http://api.gogeo.io/1.0/map/" + gogeo.Configuration.getDatabaseName() + "/" + gogeo.Configuration.getCollectionName() + "/{z}/{x}/{y}/tile.png?mapkey=" + gogeo.Configuration.getMapKey() + "&stylename=gogeo_many_points";
+                    var url = "http://api.gogeo.io/1.0/map/" + gogeo.Configuration.getDatabaseName() + "/" + gogeo.Configuration.getCollectionName() +
+                        "/{z}/{x}/{y}/tile.png?mapkey=" + gogeo.Configuration.getMapKey() + "&stylename=gogeo_many_points";
                     var initialPos = L.latLng(43.717232, -92.353034);
                     var map = L.map("welcome-map").setView(initialPos, 5);
                     map.addLayer(L.tileLayer('https://dnv9my2eseobd.cloudfront.net/v3/cartodb.map-4xtxp73f/{z}/{x}/{y}.png', {
@@ -743,18 +753,15 @@ var gogeo;
                         bottom: 40,
                         left: 55
                     },
-                    x: function (d) {
-                        return d.label;
-                    },
-                    y: function (d) {
-                        return d.value;
-                    },
+                    x: function (d) { return d.label; },
+                    y: function (d) { return d.value; },
                     useInteractiveGuideline: true,
                     dispatch: {},
                     showXAxis: false,
                     tooltipContent: function (key, x, y, obj) {
                         y = numeral(y).format("0");
-                        var content = '<h3>' + obj.point.label + '</h3>' + '<p>' + y + '</p>';
+                        var content = '<h3>' + obj.point.label + '</h3>'
+                            + '<p>' + y + '</p>';
                         return content;
                     },
                     transitionDuration: 250
@@ -770,12 +777,8 @@ var gogeo;
                     type: "pieChart",
                     height: this.getChartWidth(),
                     width: this.getChartWidth(),
-                    x: function (d) {
-                        return d.label;
-                    },
-                    y: function (d) {
-                        return d.value;
-                    },
+                    x: function (d) { return d.label; },
+                    y: function (d) { return d.value; },
                     showLabels: false,
                     transitionDuration: 500,
                     showLegend: true,
@@ -787,7 +790,9 @@ var gogeo;
                     tooltipContent: function (key, y, e) {
                         var tooltip = e.point.tooltip || key;
                         y = numeral(y).format("0");
-                        var content = '<h3 style="background-color: ' + e.color + '">' + tooltip + '</h3>' + '<p>' + y + '</p>';
+                        var content = '<h3 style="background-color: '
+                            + e.color + '">' + tooltip + '</h3>'
+                            + '<p>' + y + '</p>';
                         return content;
                     },
                     legend: {
@@ -949,17 +954,21 @@ var gogeo;
                 enable: true,
                 text: "Age Chart"
             };
-            this.service.circleObservable.where(function (point) { return point != null; }).throttle(400).subscribe(function (point) {
+            this.service.circleObservable
+                .where(function (point) { return point != null; })
+                .throttle(400)
+                .subscribe(function (point) {
                 var geom = {
                     type: "Point",
                     coordinates: [
-                        point.lng,
-                        point.lat
+                        point.lng, point.lat
                     ]
                 };
                 _this.service.updateCensus(geom);
             });
-            this.service.censusObservable.where(function (result) { return result != null; }).subscribe(function (result) {
+            this.service.censusObservable
+                .where(function (result) { return result != null; })
+                .subscribe(function (result) {
                 _this.handleCensusResult(result);
             });
             var w = angular.element(this.$window);
@@ -1038,7 +1047,9 @@ var gogeo;
             this.$scope = $scope;
             this.service = service;
             this.crimes = [];
-            this.service.crimesObservable.where(function (result) { return result != null; }).subscribe(function (result) {
+            this.service.crimesObservable
+                .where(function (result) { return result != null; })
+                .subscribe(function (result) {
                 _this.handleCrimesResult(result);
             });
         }
@@ -1122,7 +1133,7 @@ var gogeo;
 /// <reference path="../../shared/abstract-controller.ts" />
 /// <reference path="../services/dashboard-events.ts" />
 /// <reference path="../services/dashboard-service.ts" />
-var __extends = this.__extends || function (d, b) {
+var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
@@ -1210,7 +1221,10 @@ var gogeo;
             for (var i in layers) {
                 this.layerGroup.addLayer(layers[i]);
             }
-            this.service.queryObservable.where(function (q) { return q != null; }).throttle(400).subscribeAndApply(this.$scope, function (query) { return _this.queryHandler(query); });
+            this.service.queryObservable
+                .where(function (q) { return q != null; })
+                .throttle(400)
+                .subscribeAndApply(this.$scope, function (query) { return _this.queryHandler(query); });
         };
         DashboardMapController.prototype.centerMap = function (lat, lng) {
             if (lat && lng) {
@@ -1242,7 +1256,12 @@ var gogeo;
             return new L.Google("ROADMAP", options);
         };
         DashboardMapController.prototype.getDayMap = function () {
-            return new L.Google('ROADMAP', { maptiks_id: "day-map" });
+            var url = "https://{s}.api.tomtom.com/map/1/tile/basic/main/{z}/{x}/{y}.png?key=x7es9779w29jcm3yhqgvwunf";
+            var options = {
+                attributionControl: false,
+                doubleClickZoom: false
+            };
+            return L.tileLayer(url, options);
         };
         DashboardMapController.prototype.blockClick = function () {
             this.canOpenPopup = false;
@@ -1293,12 +1312,15 @@ var gogeo;
             else if (collection === gogeo.Configuration.getCrimesCollection()) {
                 stylename = "crimes_style";
             }
-            var url = "/map/" + database + "/" + collection + "/{z}/{x}/{y}/" + serviceName + "?buffer=" + buffer + "&mapkey=123";
+            var url = "/map/"
+                + database + "/" +
+                collection + "/{z}/{x}/{y}/"
+                + serviceName + "?buffer=" + buffer + "&mapkey=123";
             if (stylename) {
                 url = url + "&stylename=" + stylename;
             }
             if (this.query) {
-                url = "" + url + "&q=" + encodeURIComponent(angular.toJson(this.query));
+                url = url + "&q=" + encodeURIComponent(angular.toJson(this.query));
             }
             return gogeo.Configuration.prefixUrl(url);
         };
@@ -1473,22 +1495,28 @@ var gogeo;
             this.families = 0;
             this.nonfamily = 0;
             this.householdsIncome = 0;
-            this.service.circleObservable.where(function (point) { return point != null; }).throttle(400).subscribe(function (point) {
+            this.service.circleObservable
+                .where(function (point) { return point != null; })
+                .throttle(400)
+                .subscribe(function (point) {
                 var geom = {
                     type: "Point",
                     coordinates: [
-                        point.lng,
-                        point.lat
+                        point.lng, point.lat
                     ]
                 };
                 _this.handleCompaniesResult(_this.service.businessGeoAgg(geom));
                 _this.service.updateCrimesAgg(geom);
                 _this.service.updateCensus(geom);
             });
-            this.service.censusObservable.where(function (result) { return result != null; }).subscribe(function (result) {
+            this.service.censusObservable
+                .where(function (result) { return result != null; })
+                .subscribe(function (result) {
                 _this.handleCensusResult(result);
             });
-            this.service.crimesObservable.where(function (result) { return result != null; }).subscribe(function (result) {
+            this.service.crimesObservable
+                .where(function (result) { return result != null; })
+                .subscribe(function (result) {
                 _this.handleCrimesResult(result);
             });
         }
@@ -1555,7 +1583,10 @@ var gogeo;
             this.service = service;
             this.radius = 0.5;
             this.radiusObservale = new Rx.BehaviorSubject(0);
-            Rx.Observable.merge(this.radiusObservale).throttle(200).subscribe(function () {
+            Rx.Observable
+                .merge(this.radiusObservale)
+                .throttle(200)
+                .subscribe(function () {
                 _this.service.updateRadius(_this.radius);
             });
         }
