@@ -3,7 +3,7 @@
 git checkout -- .
 git pull origin master
 
-APP_FOLDER=gogeo-tweet
+APP_FOLDER=src
 cd $APP_FOLDER
 
 rm -rf dist-old
