@@ -225,7 +225,13 @@ module gogeo {
     }
 
     private getDayMap() {
-      return new L.Google('ROADMAP');
+      let url = "https://{s}.api.tomtom.com/map/1/tile/basic/main/{z}/{x}/{y}.png?key=x7es9779w29jcm3yhqgvwunf";
+      let options = {
+        attributionControl: false,
+        doubleClickZoom: false
+      };
+
+      return L.tileLayer(url, options);
     }
 
     private blockPopup() {

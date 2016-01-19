@@ -75,7 +75,7 @@ gulp.task("bundleCSS", function() {
         fromBower("mapbox.js/mapbox.css"),
         fromBower("leaflet-draw/dist/leaflet.draw.css"),
         fromBower("angucomplete-alt/angucomplete-alt.css"),
-        fromBower("nvd3/nv.d3.css"),
+        fromBower("nvd3/build/nv.d3.css"),
         "./lib/css/MarkerCluster.css",
         "./lib/css/MarkerCluster.Default.css",
         "app/**/*.css"
@@ -109,7 +109,7 @@ gulp.task("bundleCoreJS", function() {
         fromBower("momentjs/min/moment-with-locales.min.js"),
         fromBower("ngGeolocation/ngGeolocation.min.js"),
         fromBower("d3/d3.min.js"),
-        fromBower("nvd3/nv.d3.min.js"),
+        fromBower("nvd3/build/nv.d3.min.js"),
         fromBower("angular-nvd3/dist/angular-nvd3.min.js"),
         fromBower("angucomplete-alt/dist/angucomplete-alt.min.js"),
         fromBower("angular-capitalize-filter/capitalize.min.js"),
